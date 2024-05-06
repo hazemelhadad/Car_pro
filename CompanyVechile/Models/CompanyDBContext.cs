@@ -18,6 +18,23 @@ namespace CompanyVechile.Models
         {
             modelBuilder.Entity<EmployeePhone>().HasKey(e => new {e.Employee_ID, e.Employee_PhoneNumber }); //MultiValued Table Composite primary key
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Vehicle>()
+            .Property(v => v.License_Registeration)
+            .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+
+            modelBuilder.Entity<Vehicle>()
+                .Property(v => v.Vehicle_BrandName)
+                .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+
+            modelBuilder.Entity<Vehicle>()
+                .Property(v => v.Vehicle_Color)
+                .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+
+            modelBuilder.Entity<Vehicle>()
+                .Property(v => v.Vehicle_Type)
+                .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+
         }
     }
 }

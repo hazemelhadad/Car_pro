@@ -4,6 +4,7 @@ using CompanyVechile.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyVechile.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    partial class CompanyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240504161232_second")]
+    partial class second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,13 +106,10 @@ namespace CompanyVechile.Migrations
 
             modelBuilder.Entity("CompanyVechile.Models.Vehicle", b =>
                 {
-                    b.Property<int>("Vehicle_PlateNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Vehicle_PlateNumber")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Vehicle_PlateNumber"));
-
-                    b.Property<int>("Branch_ID")
+                    b.Property<int?>("Branch_ID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("License_ExpirationDate")
@@ -117,7 +117,7 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("License_Registeration")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
 
                     b.Property<string>("License_SerialNumber")
                         .IsRequired()
@@ -125,7 +125,7 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
 
                     b.Property<string>("Vehicle_ChassisNum")
                         .IsRequired()
@@ -133,18 +133,14 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
 
                     b.Property<int>("Vehicle_ManufactureYear")
                         .HasColumnType("int");
 
-                    b.Property<string>("Vehicle_PlateNum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Vehicle_Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
 
                     b.HasKey("Vehicle_PlateNumber");
 
@@ -158,8 +154,8 @@ namespace CompanyVechile.Migrations
                     b.Property<int>("EmployeesEmployee_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("VehiclesVehicle_PlateNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("VehiclesVehicle_PlateNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("EmployeesEmployee_ID", "VehiclesVehicle_PlateNumber");
 
@@ -194,9 +190,7 @@ namespace CompanyVechile.Migrations
                 {
                     b.HasOne("CompanyVechile.Models.Branches", "Branches")
                         .WithMany("Vehicles")
-                        .HasForeignKey("Branch_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Branch_ID");
 
                     b.Navigation("Branches");
                 });
