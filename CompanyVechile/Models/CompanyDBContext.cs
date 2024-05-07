@@ -1,40 +1,57 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
+using System.Globalization;
 
 namespace CompanyVechile.Models
 {
-    public class CompanyDBContext:DbContext
+    public class CompanyDBContext : DbContext
     {
         public DbSet<Branches> Branches { get; set; }
         public DbSet<EmployeePhone> EmployeePhones { get; set; }
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        public CompanyDBContext(DbContextOptions<CompanyDBContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("Data Source = .; Initial Catalog = AramoonDatabase; Integrated Security = True; Trust Server Certificate = True");
-            base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EmployeePhone>().HasKey(e => new {e.Employee_ID, e.Employee_PhoneNumber }); //MultiValued Table Composite primary key
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.UseCollation("Arabic_CI_AS"); 
+            modelBuilder.Entity<EmployeePhone>().HasKey(e => new { e.Employee_ID, e.Employee_PhoneNumber });
+
+            modelBuilder.Entity<EmployeePhone>()
+            .HasOne(e => e.Employees) 
+            .WithMany(e => e.EmployeePhones) 
+            .HasForeignKey(e => e.Employee_ID);
 
             modelBuilder.Entity<Vehicle>()
-            .Property(v => v.License_Registeration)
-            .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+                .Property(v => v.Vehicle_PlateNumber)
+                .HasColumnType("nvarchar(50)"); 
+
+            modelBuilder.Entity<Employees>()
+                .Property(e => e.Employee_ID)
+                .HasColumnType("nvarchar(50)"); 
+
+            modelBuilder.Entity<Vehicle>()
+                .Property(v => v.License_Registeration)
+                .HasColumnType("nvarchar(100)");
 
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Vehicle_BrandName)
-                .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+                .HasColumnType("nvarchar(100)"); 
 
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Vehicle_Color)
-                .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+                .HasColumnType("nvarchar(50)"); 
 
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Vehicle_Type)
-                .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+                .HasColumnType("nvarchar(50)");
 
+            modelBuilder.Entity<Vehicle>()
+              .Property(v => v.Vehicle_Insurance)
+              .HasColumnType("nvarchar(50)");
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

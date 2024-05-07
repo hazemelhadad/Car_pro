@@ -1,15 +1,16 @@
 using CompanyVechile.Models;
+using CompanyVechile.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddDbContext<CompanyDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<CompanyDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
+builder.Services.AddScoped<IAdminRepo, AdminRepo>(); // Registering the AdminRepo implementation with the interface
+
 
 var app = builder.Build();
 

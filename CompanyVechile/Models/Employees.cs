@@ -8,9 +8,7 @@ namespace CompanyVechile.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Employee_ID { get; set; }
         public string Employee_Name { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime Employee_Birthday { get; set; }
+        public string Employee_Birthday { get; set; }
         public string Employee_Role { get; set; }
         public string Employee_Nationality { get; set; }
         public string Employee_Street_Name { get; set; }
@@ -19,8 +17,9 @@ namespace CompanyVechile.Models
 
         [ForeignKey("Branches")]
         public int Branch_ID { get; set; }
-        public Branches Branches { get; set; }
-        public ICollection<Vehicle> Vehicles { get; set; }  //Many to Many table
+        public ICollection<Vehicle> Vehicle { get; set; }  //Many to Many table
+        public ICollection<EmployeePhone> EmployeePhones { get; set; }
+
 
     }
 }

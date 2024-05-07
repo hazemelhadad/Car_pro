@@ -4,7 +4,6 @@ using CompanyVechile.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,14 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyVechile.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    [Migration("20240504161232_second")]
-    partial class second
+    partial class CompanyDBContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .UseCollation("Arabic_CI_AS")
                 .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -48,11 +46,11 @@ namespace CompanyVechile.Migrations
 
             modelBuilder.Entity("CompanyVechile.Models.EmployeePhone", b =>
                 {
-                    b.Property<int>("Employee_ID")
-                        .HasColumnType("int");
+                    b.Property<string>("Employee_ID")
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Employee_PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("Employee_PhoneNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Employee_ID", "Employee_PhoneNumber");
 
@@ -61,17 +59,16 @@ namespace CompanyVechile.Migrations
 
             modelBuilder.Entity("CompanyVechile.Models.Employees", b =>
                 {
-                    b.Property<int>("Employee_ID")
+                    b.Property<string>("Employee_ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Employee_ID"));
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Branch_ID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Employee_Birthday")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Employee_Birthday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Employee_BuildingNumber")
                         .IsRequired()
@@ -99,25 +96,24 @@ namespace CompanyVechile.Migrations
 
                     b.HasKey("Employee_ID");
 
-                    b.HasIndex("Branch_ID");
-
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("CompanyVechile.Models.Vehicle", b =>
                 {
                     b.Property<string>("Vehicle_PlateNumber")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("Branch_ID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("License_ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("License_ExpirationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("License_Registeration")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("License_SerialNumber")
                         .IsRequired()
@@ -125,7 +121,7 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100) COLLATE Arabic_CI_AI");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Vehicle_ChassisNum")
                         .IsRequired()
@@ -133,14 +129,18 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Vehicle_Insurance")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Vehicle_ManufactureYear")
                         .HasColumnType("int");
 
                     b.Property<string>("Vehicle_Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50) COLLATE Arabic_CI_AI");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Vehicle_PlateNumber");
 
@@ -151,15 +151,15 @@ namespace CompanyVechile.Migrations
 
             modelBuilder.Entity("EmployeesVehicle", b =>
                 {
-                    b.Property<int>("EmployeesEmployee_ID")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeesEmployee_ID")
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("VehiclesVehicle_PlateNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Vehicle_PlateNumber")
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("EmployeesEmployee_ID", "VehiclesVehicle_PlateNumber");
+                    b.HasKey("EmployeesEmployee_ID", "Vehicle_PlateNumber");
 
-                    b.HasIndex("VehiclesVehicle_PlateNumber");
+                    b.HasIndex("Vehicle_PlateNumber");
 
                     b.ToTable("EmployeesVehicle");
                 });
@@ -167,7 +167,7 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.EmployeePhone", b =>
                 {
                     b.HasOne("CompanyVechile.Models.Employees", "Employees")
-                        .WithMany()
+                        .WithMany("EmployeePhones")
                         .HasForeignKey("Employee_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -175,24 +175,13 @@ namespace CompanyVechile.Migrations
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("CompanyVechile.Models.Employees", b =>
-                {
-                    b.HasOne("CompanyVechile.Models.Branches", "Branches")
-                        .WithMany()
-                        .HasForeignKey("Branch_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Branches");
-                });
-
             modelBuilder.Entity("CompanyVechile.Models.Vehicle", b =>
                 {
-                    b.HasOne("CompanyVechile.Models.Branches", "Branches")
+                    b.HasOne("CompanyVechile.Models.Branches", "Branch")
                         .WithMany("Vehicles")
                         .HasForeignKey("Branch_ID");
 
-                    b.Navigation("Branches");
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("EmployeesVehicle", b =>
@@ -205,7 +194,7 @@ namespace CompanyVechile.Migrations
 
                     b.HasOne("CompanyVechile.Models.Vehicle", null)
                         .WithMany()
-                        .HasForeignKey("VehiclesVehicle_PlateNumber")
+                        .HasForeignKey("Vehicle_PlateNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -213,6 +202,11 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.Branches", b =>
                 {
                     b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("CompanyVechile.Models.Employees", b =>
+                {
+                    b.Navigation("EmployeePhones");
                 });
 #pragma warning restore 612, 618
         }

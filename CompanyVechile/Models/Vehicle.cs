@@ -9,18 +9,18 @@ namespace CompanyVechile.Models
         public string Vehicle_PlateNumber { get; set; }
         public string License_SerialNumber { get; set; } 
         public string License_Registeration { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime License_ExpirationDate { get; set; }
+        public string License_ExpirationDate { get; set; }
         public string Vehicle_ChassisNum { get; set; }
         public int Vehicle_ManufactureYear { get; set; }
         public string Vehicle_BrandName { get; set; }
         public string Vehicle_Color { get; set; }
         public string Vehicle_Type { get; set; }
+        public string Vehicle_Insurance { get; set; }
 
-        [ForeignKey("Branches")]
+        [ForeignKey("Branch")]
         public int? Branch_ID { get; set; }
-        public Branches Branches { get; set; }  //Not sure List or single object
+        public Branches Branch { get; set; }
+
         public  ICollection<Employees> Employees { get; set; }   //Many to Many table
 
     }
