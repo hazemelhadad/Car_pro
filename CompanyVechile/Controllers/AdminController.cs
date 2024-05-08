@@ -63,5 +63,15 @@ namespace CompanyVechile.Controllers
             return Ok(empDto);
         }
         //--------------------------------------------------------------------------------
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            var model = AdminRepo.GetEmpByID(id);
+            if (model == null) { return NotFound(); }
+
+            AdminRepo.DeleteEmp(id);
+            return Ok(model);
+        }
+        //--------------------------------------------------------------------------------
     }
 }

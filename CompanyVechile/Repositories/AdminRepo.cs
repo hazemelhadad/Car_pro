@@ -14,6 +14,7 @@ namespace CompanyVechile.Repositories
         List<EmployeeDTO> GetEmpByName(string name);
         void AddEmp(EmployeeDTO empDto);
         void EditEmp(EmployeeDTO empDto, int id);
+        void DeleteEmp(int id);
     }
     //-------------------------------------------------------
     public class AdminRepo : IAdminRepo
@@ -131,5 +132,15 @@ namespace CompanyVechile.Repositories
         }
 
         //-------------------------------------------------------
+        public void DeleteEmp (int id)
+        {
+            var model = db.Employees.FirstOrDefault(p => p.Employee_ID == id);
+            if (model == null) { return ; }
+
+            db.Employees.Remove(model);
+            db.SaveChanges();
+        }
+        //-------------------------------------------------------
+
     }
 }
