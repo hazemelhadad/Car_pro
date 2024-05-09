@@ -17,5 +17,8 @@ namespace CompanyVechile.Repositories
         List<VehicleDTO> GetAllVehicles(int branchId);
         List<VehicleDTO> GetVehicleByPlateNumber(string PltNum, int branchId);
         List<VehicleDTO> GetVehicleByType(string type, int branchId);
+        void AddVehicle(VehicleDTO vhc);
+        void EditVhc(VehicleDTO vhc, string PltNum);
+        void DeleteVehicle(string PltNum);
     }
 }

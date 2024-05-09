@@ -186,5 +186,55 @@ namespace CompanyVechile.Repositories
             }).ToList();
         }
         //-------------------------------------------------------
+        public void AddVehicle(VehicleDTO vhc)
+        {
+            var vehicle = new Vehicle
+            {
+                Vehicle_PlateNumber = vhc.Vehicle_PlateNumber,
+                License_SerialNumber = vhc.License_SerialNumber,
+                License_Registeration = vhc.License_Registeration,
+                License_ExpirationDate = vhc.License_ExpirationDate,
+                Vehicle_ChassisNum = vhc.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = vhc.Vehicle_ManufactureYear,
+                Vehicle_BrandName = vhc.Vehicle_BrandName,
+                Vehicle_Color = vhc.Vehicle_Color,
+                Vehicle_Type = vhc.Vehicle_Type,
+                Vehicle_Insurance = vhc.Vehicle_Insurance,
+                Branch_ID = vhc.Branch_ID
+            };
+
+           db.Vehicle.Add(vehicle);
+           db.SaveChanges();
+        }
+        //-------------------------------------------------------
+        public void EditVhc(VehicleDTO vhc, string PltNum)
+        {
+            var oldVehicle = db.Vehicle.FirstOrDefault(v=>v.Vehicle_PlateNumber == PltNum);
+            if (oldVehicle == null) { return; }
+
+            //No Edit for Vehicle PlateNumber.
+            //No Edit for Vehicle's Branch ID.
+            oldVehicle.Vehicle_Color = vhc.Vehicle_Color;
+            oldVehicle.Vehicle_ChassisNum = vhc.Vehicle_ChassisNum;
+            oldVehicle.Vehicle_BrandName = vhc.Vehicle_BrandName;
+            oldVehicle.License_SerialNumber = vhc.License_SerialNumber;
+            oldVehicle.License_ExpirationDate = vhc.License_ExpirationDate; 
+            oldVehicle.License_Registeration = vhc.License_Registeration;
+            oldVehicle.License_SerialNumber = vhc.License_SerialNumber;
+            oldVehicle.Vehicle_Type = vhc.Vehicle_Type; 
+            oldVehicle.Vehicle_ManufactureYear = vhc.Vehicle_ManufactureYear;
+
+            db.SaveChanges();
+        }
+        //-------------------------------------------------------
+        public void DeleteVehicle(string PltNum)
+        {
+            var model = db.Vehicle.FirstOrDefault(v => v.Vehicle_PlateNumber == PltNum);
+            if (model == null) { return; }
+
+            db.Vehicle.Remove(model);
+            db.SaveChanges();
+        }
+        //-------------------------------------------------------
     }
 }

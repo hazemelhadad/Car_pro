@@ -17,7 +17,7 @@ namespace CompanyVechile.Controllers
             AdminRepo = _AdminRepo;
         }
         //--------------------------------------------------------------------------------
-        [HttpGet]   //Returns all Employees in Database (for logged in Admin Branch_ID)
+        [HttpGet("/api/GetAllEmployeesByBranch")]   //Returns all Employees in Database (for logged in Admin Branch_ID)
         public IActionResult GetAllEmployees()
         {
             var branchId = 1;   //Here,apply method to return actual branch ID from Token
@@ -27,7 +27,7 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        [HttpGet("{id}")]   //Returns Employee by searching his ID
+        [HttpGet("/api/GetEmployeeByHisNationalID/{id}")]   //Returns Employee by searching his ID
         public IActionResult GetEmployeeById(int id) 
         {
             var branchId = 1;   //Here,apply method to return actual branch ID from Token
@@ -37,7 +37,7 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        [HttpGet("/api/employees/{name}")]   //Returns Employee by searching his Name
+        [HttpGet("/api/GetEmployeeByHisName/{name}")]   //Returns Employee by searching his Name
         public IActionResult GetEmployeeByName(string name)
         {
             var branchId = 1;   //Here,apply method to return actual branch ID from Token
@@ -47,7 +47,7 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        [HttpPost]
+        [HttpPost("/api/AddEmployee")]
         public IActionResult AddEmployee(EmployeeDTO empDto)
         {
             var branchId = 1;   //Here,apply method to return actual branch ID from Token
@@ -66,7 +66,7 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        [HttpPut("{id}")] //id Sent in url
+        [HttpPut("/api/UpdateEmployeeData{id}")] //id Sent in url
         public IActionResult EditEmployee(EmployeeDTO empDto, int id) //sent in body of Request (empDTO)
         {
             if (empDto == null) { return BadRequest(); }
@@ -77,7 +77,7 @@ namespace CompanyVechile.Controllers
             return Ok(empDto);
         }
         //--------------------------------------------------------------------------------
-        [HttpDelete("{id}")]
+        [HttpDelete("/api/DeleteEmployee/{id}")]
         public IActionResult DeleteEmployee(int id)
         {
             var branchId = 1;    //Here,apply method to return actual branch ID from Token
@@ -88,7 +88,11 @@ namespace CompanyVechile.Controllers
             AdminRepo.DeleteEmp(id);
             return Ok(model);
         }
+
         //--------------------------------------------------------------------------------
+                    //----------------------VEHICLES----------------------//
+        //--------------------------------------------------------------------------------
+
         [HttpGet("/api/GetAllVehiclesByBranch/")]
         public IActionResult GetAllBranchVehicles()
         {
@@ -122,5 +126,43 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
+        [HttpPost("/api/AddVehicle")]
+        public IActionResult AddVehicleForBranch(VehicleDTO vhc)
+        {
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            if (vhc.Branch_ID != branchId)
+            {
+                return BadRequest("Cannot add employee to a different branch");
+            }
+
+            AdminRepo.AddVehicle(vhc);
+            return Ok(vhc);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpPut("/api/EditVehicle/{vhc}")]
+        public IActionResult EditVehicle(VehicleDTO vhc, string PltNum)
+        {
+            if (vhc == null) { return BadRequest(); }
+            if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest(); }
+
+            AdminRepo.EditVhc(vhc, PltNum);
+
+            return Ok(vhc);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpDelete("/api/DeleteVehice/{PltNum}")]
+        public IActionResult DeleteVehicles(string PltNum)
+        {
+            var branchId = 1;    //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
+            if (model == null) { return NotFound(); }
+
+            AdminRepo.DeleteVehicle(PltNum);
+            return Ok();
+        }
+        //--------------------------------------------------------------------------------
+
     }
 }
