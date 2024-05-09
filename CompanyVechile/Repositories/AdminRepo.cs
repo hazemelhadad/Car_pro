@@ -117,7 +117,7 @@ namespace CompanyVechile.Repositories
             existingEmployee.Employee_BuildingNumber = empDto.Employee_BuildingNumber;
             existingEmployee.Employee_City = empDto.Employee_City;
 
-            //No edit for Employee Branch_ID , only SuperAdmin allowed to do this
+            //No edit for Employee Branch_ID & Employee National ID , only SuperAdmin allowed to do this.
             db.SaveChanges();
         }
 

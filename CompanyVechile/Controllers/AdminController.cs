@@ -66,7 +66,7 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        [HttpPut("/api/UpdateEmployeeData{id}")] //id Sent in url
+        [HttpPut("/api/UpdateEmployeeData/{id}")] //id Sent in url
         public IActionResult EditEmployee(EmployeeDTO empDto, int id) //sent in body of Request (empDTO)
         {
             if (empDto == null) { return BadRequest(); }
@@ -140,8 +140,8 @@ namespace CompanyVechile.Controllers
             return Ok(vhc);
         }
         //--------------------------------------------------------------------------------
-        [HttpPut("/api/EditVehicle/{vhc}")]
-        public IActionResult EditVehicle(VehicleDTO vhc, string PltNum)
+        [HttpPut("/api/UpdateVehicleData/{PltNum}")]       //PltNum sent in URL
+        public IActionResult EditVehicle(VehicleDTO vhc, string PltNum) //sent in body of Request (vhc)
         {
             if (vhc == null) { return BadRequest(); }
             if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest(); }
@@ -151,7 +151,7 @@ namespace CompanyVechile.Controllers
             return Ok(vhc);
         }
         //--------------------------------------------------------------------------------
-        [HttpDelete("/api/DeleteVehice/{PltNum}")]
+        [HttpDelete("/api/DeleteVehicle/{PltNum}")] 
         public IActionResult DeleteVehicles(string PltNum)
         {
             var branchId = 1;    //Here,apply method to return actual branch ID from Token
@@ -160,7 +160,7 @@ namespace CompanyVechile.Controllers
             if (model == null) { return NotFound(); }
 
             AdminRepo.DeleteVehicle(PltNum);
-            return Ok();
+            return Ok(model);
         }
         //--------------------------------------------------------------------------------
 
