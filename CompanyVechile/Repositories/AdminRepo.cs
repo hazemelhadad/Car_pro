@@ -6,30 +6,20 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyVechile.Repositories
-{
-    public interface IAdminRepo
-    {
-        List<EmployeeDTO> GetAll();
-        EmployeeDTO GetEmpByID(int id);
-        List<EmployeeDTO> GetEmpByName(string name);
-        void AddEmp(EmployeeDTO empDto);
-        void EditEmp(EmployeeDTO empDto, int id);
-        void DeleteEmp(int id);
-    }
-    //-------------------------------------------------------
+{   
     public class AdminRepo : IAdminRepo
     {
         private readonly CompanyDBContext db;
-        //-------------------------------------------------------
         public AdminRepo(CompanyDBContext dbContext)
         {
             db = dbContext;
         }
         //-------------------------------------------------------
-        public List<EmployeeDTO> GetAll()
+        public List<EmployeeDTO> GetAll(int branchId)
         {
             return db.Employees
                      .Include(e => e.EmployeePhones)
+                     .Where(e => e.Branch_ID == branchId)
                      .Select(e => new EmployeeDTO
                      {
                          Employee_ID = e.Employee_ID,
@@ -46,10 +36,10 @@ namespace CompanyVechile.Repositories
                      .ToList();
         }
         //-------------------------------------------------------
-        public EmployeeDTO GetEmpByID(int id)
+        public EmployeeDTO GetEmpByID(int id, int branchId)
         {
             var employee = db.Employees
-                             .Where(e => e.Employee_ID == id)
+                             .Where(e => e.Employee_ID == id && e.Branch_ID == branchId)
                              .Include(e => e.EmployeePhones)
                              .Select(e => new EmployeeDTO
                              {
@@ -70,10 +60,10 @@ namespace CompanyVechile.Repositories
         }
 
         //-------------------------------------------------------
-        public List<EmployeeDTO> GetEmpByName(string name)
+        public List<EmployeeDTO> GetEmpByName(string name, int branchId)
         {
             return db.Employees
-                     .Where(e => e.Employee_Name.Contains(name))
+                     .Where(e => e.Employee_Name.Contains(name) && e.Branch_ID == branchId )
                      .Include(e => e.EmployeePhones)
                      .Select(e => new EmployeeDTO
                      {
@@ -126,8 +116,8 @@ namespace CompanyVechile.Repositories
             existingEmployee.Employee_Street_Name = empDto.Employee_Street_Name;
             existingEmployee.Employee_BuildingNumber = empDto.Employee_BuildingNumber;
             existingEmployee.Employee_City = empDto.Employee_City;
-            existingEmployee.Branch_ID = empDto.Branch_ID;
 
+            //No edit for Employee Branch_ID , only SuperAdmin allowed to do this
             db.SaveChanges();
         }
 
@@ -141,6 +131,60 @@ namespace CompanyVechile.Repositories
             db.SaveChanges();
         }
         //-------------------------------------------------------
+        public List<VehicleDTO> GetAllVehicles(int branchId)
+        {
+            return db.Vehicle.Where(e => e.Branch_ID == branchId).Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID=v.Branch_ID
+            }).ToList();
 
+        }
+        //-------------------------------------------------------
+        public List<VehicleDTO> GetVehicleByPlateNumber(string PltNum, int branchId)
+        {
+            return db.Vehicle.Where(v => v.Vehicle_PlateNumber.Contains(PltNum) && v.Branch_ID == branchId).Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID = v.Branch_ID
+            }).ToList();
+        }
+        //-------------------------------------------------------
+        public List<VehicleDTO> GetVehicleByType(string type, int branchId)
+        {
+            return db.Vehicle.Where(v => v.Vehicle_Type == type && v.Branch_ID == branchId).Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID = v.Branch_ID
+            }).ToList();
+        }
+        //-------------------------------------------------------
     }
 }

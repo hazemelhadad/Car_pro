@@ -17,10 +17,12 @@ namespace CompanyVechile.Controllers
             AdminRepo = _AdminRepo;
         }
         //--------------------------------------------------------------------------------
-        [HttpGet]   //Returns all Employees in Database
+        [HttpGet]   //Returns all Employees in Database (for logged in Admin Branch_ID)
         public IActionResult GetAllEmployees()
         {
-            var model = AdminRepo.GetAll();
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetAll(branchId);
             if (model == null) { return NotFound(); }
             return Ok(model);
         }
@@ -28,7 +30,9 @@ namespace CompanyVechile.Controllers
         [HttpGet("{id}")]   //Returns Employee by searching his ID
         public IActionResult GetEmployeeById(int id) 
         {
-            var model = AdminRepo.GetEmpByID(id);
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetEmpByID(id,branchId);
             if (model == null) { return NotFound();};
             return Ok(model);
         }
@@ -36,7 +40,9 @@ namespace CompanyVechile.Controllers
         [HttpGet("/api/employees/{name}")]   //Returns Employee by searching his Name
         public IActionResult GetEmployeeByName(string name)
         {
-            var model = AdminRepo.GetEmpByName(name);
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetEmpByName(name,branchId);
             if (model == null) { return NotFound();}
             return Ok(model);
         }
@@ -44,11 +50,19 @@ namespace CompanyVechile.Controllers
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDTO empDto)
         {
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
             if (empDto == null) { return BadRequest(); }
+
+            if (empDto.Branch_ID != branchId)
+            {
+                return BadRequest("Cannot add employee to a different branch");
+            }
 
             AdminRepo.AddEmp(empDto);
 
-            var model= AdminRepo.GetAll();
+
+            var model= AdminRepo.GetAll(branchId);
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
@@ -66,10 +80,45 @@ namespace CompanyVechile.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(int id)
         {
-            var model = AdminRepo.GetEmpByID(id);
+            var branchId = 1;    //Here,apply method to return actual branch ID from Token
+            var model = AdminRepo.GetEmpByID(id, branchId);
+
             if (model == null) { return NotFound(); }
 
             AdminRepo.DeleteEmp(id);
+            return Ok(model);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpGet("/api/GetAllVehiclesByBranch/")]
+        public IActionResult GetAllBranchVehicles()
+        {
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetAllVehicles(branchId);
+            if (model == null) { return NotFound(); };
+
+            return Ok(model);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpGet("/api/GetVehicleByPltNum/{PltNum}")]
+        public IActionResult GetVehicleByPlateNumberViaBranch(string PltNum)
+        {
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+            var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
+            if (model == null) { return NotFound(); };
+
+            return Ok(model);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpGet("/api/GetVehicleByType/{type}")]
+        public IActionResult GetVehicleByType(string type)
+        {
+            var branchId = 1;   //Here,apply method to return actual branch ID from Token
+            
+            var model = AdminRepo.GetVehicleByType(type, branchId);
+            if (model == null) { return NotFound();}
+
             return Ok(model);
         }
         //--------------------------------------------------------------------------------

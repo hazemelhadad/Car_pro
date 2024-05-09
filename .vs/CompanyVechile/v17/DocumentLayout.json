@@ -9,6 +9,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{ED6B8396-3123-46F8-86A4-7903928A69CC}|CompanyVechile\\CompanyVechile.csproj|G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\companyvechile\\repositories\\adminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{ED6B8396-3123-46F8-86A4-7903928A69CC}|CompanyVechile\\CompanyVechile.csproj|solutionrelative:companyvechile\\repositories\\adminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\companyvechile\\repositories\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:companyvechile\\repositories\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,7 +32,7 @@
               "RelativeDocumentMoniker": "CompanyVechile\\Controllers\\AdminController.cs",
               "ToolTip": "G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\CompanyVechile\\Controllers\\AdminController.cs",
               "RelativeToolTip": "CompanyVechile\\Controllers\\AdminController.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAqwEMAAAAJAAAA",
+              "ViewState": "AQIAAGoAAAAAAAAAAAAYwHYAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-07T12:37:20.349Z",
               "EditorCaption": ""
@@ -41,9 +45,22 @@
               "RelativeDocumentMoniker": "CompanyVechile\\Repositories\\AdminRepo.cs",
               "ToolTip": "G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\CompanyVechile\\Repositories\\AdminRepo.cs",
               "RelativeToolTip": "CompanyVechile\\Repositories\\AdminRepo.cs",
-              "ViewState": "AQIAAHoAAAAAAAAAAADwv4wAAAAdAAAA",
+              "ViewState": "AQIAAKcAAAAAAAAAAAAIwLkAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-07T16:03:59.987Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IAdminRepo.cs",
+              "DocumentMoniker": "G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\CompanyVechile\\Repositories\\IAdminRepo.cs",
+              "RelativeDocumentMoniker": "CompanyVechile\\Repositories\\IAdminRepo.cs",
+              "ToolTip": "G:\\ITI\\ITI-9 months\\Web API\\CompanyVechile\\CompanyVechile\\Repositories\\IAdminRepo.cs",
+              "RelativeToolTip": "CompanyVechile\\Repositories\\IAdminRepo.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABIAAABFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-09T10:55:08.432Z",
               "EditorCaption": ""
             }
           ]
