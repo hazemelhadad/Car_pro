@@ -163,52 +163,43 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-        //[HttpGet("/api/GetAllVehiclesInUse")]   //Return only Vehicles in that table (return 1 column not 2)
-        //public IActionResult GetAllVehiclesInUse()
-        //{
-        //    var branchId = 1;   //Here,apply method to return actual branch ID from Token
-            
-        //    var model= AdminRepo.GetOccupiedVehicles(branchId);
-        //    if (model == null) { return NotFound(); };
+        [HttpGet("/api/GetAllVehiclesInUse")]   
+        public IActionResult GetAllVehiclesInUse()
+        {
+            var branchId = 2;   //Here,apply method to return actual branch ID from Token
 
-        //    return Ok(model);
-        //}
-        ////--------------------------------------------------------------------------------
-        //[HttpGet("/api/GetUsedVehiclesWithWho")]    //Return Vehicles with Employees using them (return 2 columns)
-        //public IActionResult GetUsedVehiclesWithWho()
-        //{
-        //    var branchId = 1;   //Here,apply method to return actual branch ID from Token
+            var model = AdminRepo.GetOccupiedVehicles(branchId);
+            if (model == null) { return NotFound(); };
 
-        //    var model = AdminRepo.GetOccupiedVehiclesWithWho(branchId);
-        //    if (model == null) { return NotFound(); };
+            return Ok(model);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpPost("/api/AssignEmployeeToVehicle")]
+        public IActionResult AssignEmployeeToVehicle(EmployeesVehiclesDTO evo)
+        {
+            var branchId = 1; // This should be replaced with getting branch ID from the token
 
-        //    return Ok(model);
-        //}
-        ////--------------------------------------------------------------------------------
-        //[HttpPost("/api/AssignEmployeeToVehicle/{id}")]
-        //public IActionResult AssignEmployeeToVehicle(int id)
-        //{
-        //    var branchId = 1;
+            bool success = AdminRepo.AssignEmpToVehicle(evo.EmployeeId, evo.VehiclePlateNumber, branchId);
 
-        //    var employee = AdminRepo.GetEmpByID(id,branchId);
-        //    if (employee.Branch_ID != branchId) { return BadRequest(); }
+            if (!success)
+            {
+                return BadRequest("Failed to assign employee to vehicle.");
+            }
 
-        //    AdminRepo.AddEmpToVehicle(id);
-
-        //    return Ok();
-        //}
-        ////--------------------------------------------------------------------------------
-        //[HttpDelete("/api/FreeTheVehicleFromEmployee/{PltNum}")]
-        //public IActionResult FreeVehicle(string PltNum)
-        //{
-        //    var branchId = 1;
-        //    var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
-        //    if (vehicle == null) { return NotFound(); }
+            return Ok(evo);
+        }
+        //--------------------------------------------------------------------------------
+        [HttpDelete("/api/FreeTheVehicleFromEmployee/{PltNum}")]
+        public IActionResult FreeVehicle(string PltNum)
+        {
+            var branchId = 1;
+            var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
+            if (vehicle == null) { return NotFound(); }
 
 
-        //    AdminRepo.FreeVehicleFromSingleEmployee();
-        //    return Ok(vehicle);
-        //}
+            AdminRepo.FreeVehicleFromSingleEmployee();
+            return Ok(vehicle);
+        }
         ////--------------------------------------------------------------------------------
     }
 }

@@ -22,9 +22,9 @@ namespace CompanyVechile.Repositories
         void DeleteVehicle(string PltNum);
 
         //-----EmployeeVehicles Region----
-        //List<EmployeesVehicle> GetOccupiedVehicles(int branchId);
-        //List<EmployeesVehicle> GetOccupiedVehiclesWithWho(int branchId);
-        //void AddEmpToVehicle(int id);
-        //void FreeVehicleFromSingleEmployee();
+        List<EmployeesVehiclesDTO> GetOccupiedVehicles(int branchId);
+        bool AssignEmpToVehicle(int employeeId, string vehiclePlateNumber, int branchId);
+
+        void FreeVehicleFromSingleEmployee();
     }
 }

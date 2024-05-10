@@ -20,8 +20,7 @@ namespace CompanyVechile.Models
         [ForeignKey("Branch")]
         public int? Branch_ID { get; set; }
         public Branches Branch { get; set; }
-
-        public  ICollection<Employees> Employees { get; set; }   //Many to Many table
+        public ICollection<EmployeesVehicle> EmployeesVehicles { get; set; }
 
     }
 }

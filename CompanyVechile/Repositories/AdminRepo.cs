@@ -236,26 +236,49 @@ namespace CompanyVechile.Repositories
             db.SaveChanges();
         }
         //-------------------------------------------------------
-        //public List<EmployeesVehicle> GetOccupiedVehicles(int branchId)
-        //{
+        public List<EmployeesVehiclesDTO> GetOccupiedVehicles(int branchId)
+        {
+            var vehiclesInBranch = db.EmployeesVehicles.Where(ev => ev.Employee.Branch_ID == branchId && ev.Vehicle.Branch_ID == branchId).ToList();
 
-        //}
-        ////-------------------------------------------------------
-        //public List<EmployeesVehicle> GetOccupiedVehiclesWithWho(int branchId)
-        //{
+            var dtoList = vehiclesInBranch.Select(ev => new EmployeesVehiclesDTO
+            {
+                EmployeeId = ev.EmployeeId,
+                VehiclePlateNumber = ev.VehiclePlateNumber
+            }).ToList();
 
-        //}
-        ////-------------------------------------------------------
-        //public void AddEmpToVehicle(int id)
-        //{
+            return dtoList;
+        }
+        //-------------------------------------------------------
+        public bool AssignEmpToVehicle(int employeeId, string vehiclePlateNumber, int branchId)
+        {
+            var employee = db.Employees.FirstOrDefault(e => e.Employee_ID == employeeId);
+            var vehicle = db.Vehicle.FirstOrDefault(v => v.Vehicle_PlateNumber == vehiclePlateNumber);
 
-        //}
-        ////-------------------------------------------------------
-        //public void FreeVehicleFromSingleEmployee()
-        //{
+            if (employee != null && vehicle != null && employee.Branch_ID == vehicle.Branch_ID && employee.Employee_Role == "Driver")
+            {
+                var employeeAssignedToVehicle = new EmployeesVehicle
+                {
+                    EmployeeId = employeeId,
+                    VehiclePlateNumber = vehiclePlateNumber
+                };
 
-        //}
-        ////-------------------------------------------------------
+                db.EmployeesVehicles.Add(employeeAssignedToVehicle);
+                db.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //-------------------------------------------------------
+        public void FreeVehicleFromSingleEmployee()
+        {
+
+        }
+        //-------------------------------------------------------
 
     }
 }

@@ -9,6 +9,8 @@ namespace CompanyVechile.Models
         public DbSet<EmployeePhone> EmployeePhones { get; set; }
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
+        public DbSet<EmployeesVehicle> EmployeesVehicles { get; set; }
+
 
         public CompanyDBContext(DbContextOptions<CompanyDBContext> options) : base(options)
         {
@@ -17,6 +19,7 @@ namespace CompanyVechile.Models
         {
             modelBuilder.UseCollation("Arabic_CI_AS"); 
             modelBuilder.Entity<EmployeePhone>().HasKey(e => new { e.Employee_ID, e.Employee_PhoneNumber });
+            modelBuilder.Entity<EmployeesVehicle>().HasKey(e => new { e.VehiclePlateNumber , e.EmployeeId });
 
             modelBuilder.Entity<EmployeePhone>()
             .HasOne(e => e.Employees) 
