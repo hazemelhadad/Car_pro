@@ -163,6 +163,52 @@ namespace CompanyVechile.Controllers
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
+        //[HttpGet("/api/GetAllVehiclesInUse")]   //Return only Vehicles in that table (return 1 column not 2)
+        //public IActionResult GetAllVehiclesInUse()
+        //{
+        //    var branchId = 1;   //Here,apply method to return actual branch ID from Token
+            
+        //    var model= AdminRepo.GetOccupiedVehicles(branchId);
+        //    if (model == null) { return NotFound(); };
 
+        //    return Ok(model);
+        //}
+        ////--------------------------------------------------------------------------------
+        //[HttpGet("/api/GetUsedVehiclesWithWho")]    //Return Vehicles with Employees using them (return 2 columns)
+        //public IActionResult GetUsedVehiclesWithWho()
+        //{
+        //    var branchId = 1;   //Here,apply method to return actual branch ID from Token
+
+        //    var model = AdminRepo.GetOccupiedVehiclesWithWho(branchId);
+        //    if (model == null) { return NotFound(); };
+
+        //    return Ok(model);
+        //}
+        ////--------------------------------------------------------------------------------
+        //[HttpPost("/api/AssignEmployeeToVehicle/{id}")]
+        //public IActionResult AssignEmployeeToVehicle(int id)
+        //{
+        //    var branchId = 1;
+
+        //    var employee = AdminRepo.GetEmpByID(id,branchId);
+        //    if (employee.Branch_ID != branchId) { return BadRequest(); }
+
+        //    AdminRepo.AddEmpToVehicle(id);
+
+        //    return Ok();
+        //}
+        ////--------------------------------------------------------------------------------
+        //[HttpDelete("/api/FreeTheVehicleFromEmployee/{PltNum}")]
+        //public IActionResult FreeVehicle(string PltNum)
+        //{
+        //    var branchId = 1;
+        //    var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
+        //    if (vehicle == null) { return NotFound(); }
+
+
+        //    AdminRepo.FreeVehicleFromSingleEmployee();
+        //    return Ok(vehicle);
+        //}
+        ////--------------------------------------------------------------------------------
     }
 }

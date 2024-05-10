@@ -20,5 +20,11 @@ namespace CompanyVechile.Repositories
         void AddVehicle(VehicleDTO vhc);
         void EditVhc(VehicleDTO vhc, string PltNum);
         void DeleteVehicle(string PltNum);
+
+        //-----EmployeeVehicles Region----
+        //List<EmployeesVehicle> GetOccupiedVehicles(int branchId);
+        //List<EmployeesVehicle> GetOccupiedVehiclesWithWho(int branchId);
+        //void AddEmpToVehicle(int id);
+        //void FreeVehicleFromSingleEmployee();
     }
 }

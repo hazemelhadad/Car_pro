@@ -236,5 +236,26 @@ namespace CompanyVechile.Repositories
             db.SaveChanges();
         }
         //-------------------------------------------------------
+        //public List<EmployeesVehicle> GetOccupiedVehicles(int branchId)
+        //{
+
+        //}
+        ////-------------------------------------------------------
+        //public List<EmployeesVehicle> GetOccupiedVehiclesWithWho(int branchId)
+        //{
+
+        //}
+        ////-------------------------------------------------------
+        //public void AddEmpToVehicle(int id)
+        //{
+
+        //}
+        ////-------------------------------------------------------
+        //public void FreeVehicleFromSingleEmployee()
+        //{
+
+        //}
+        ////-------------------------------------------------------
+
     }
 }
