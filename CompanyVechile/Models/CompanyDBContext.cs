@@ -11,7 +11,6 @@ namespace CompanyVechile.Models
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<EmployeesVehicle> EmployeesVehicles { get; set; }
 
-
         public CompanyDBContext(DbContextOptions<CompanyDBContext> options) : base(options)
         {
         }

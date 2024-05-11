@@ -274,11 +274,30 @@ namespace CompanyVechile.Repositories
         }
 
         //-------------------------------------------------------
-        public void FreeVehicleFromSingleEmployee()
+        public void FreeVehicleFromEmployees(string PltNum)
         {
+            var models = db.EmployeesVehicles.Where(ev => ev.VehiclePlateNumber == PltNum).ToList();
 
+            if (models.Count < 1) 
+            {
+                db.EmployeesVehicles.RemoveRange(models);   //Remove removes 1 record, RemoveRange removes more than 1 record
+                db.SaveChanges();
+            }
+            else { return; }
         }
         //-------------------------------------------------------
+        public void FreeVehicleFromSingleEmployee(int employeeId, string PltNum)
+        {
+            var employeeVehicle = db.EmployeesVehicles.FirstOrDefault(ev => ev.EmployeeId == employeeId && ev.VehiclePlateNumber == PltNum);
 
+            if (employeeVehicle != null)
+            {
+                db.EmployeesVehicles.Remove(employeeVehicle);
+                db.SaveChanges();
+            }
+
+            else { return; }
+        }
+        //-------------------------------------------------------
     }
 }

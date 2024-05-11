@@ -189,17 +189,29 @@ namespace CompanyVechile.Controllers
             return Ok(evo);
         }
         //--------------------------------------------------------------------------------
-        [HttpDelete("/api/FreeTheVehicleFromEmployee/{PltNum}")]
+        [HttpDelete("/api/FreeTheVehicleFromAllEmployees/{PltNum}")]    
         public IActionResult FreeVehicle(string PltNum)
         {
             var branchId = 1;
+
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (vehicle == null) { return NotFound(); }
 
-
-            AdminRepo.FreeVehicleFromSingleEmployee();
+            AdminRepo.FreeVehicleFromEmployees(PltNum);
             return Ok(vehicle);
         }
-        ////--------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------
+        [HttpDelete("/api/FreeTheVehicleFromSingleEmployee/{id}/{PltNum}")]
+        public IActionResult FreeVehicleFromOne (int id,string PltNum)
+        {
+            var branchId = 1;
+
+            var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
+            if (vehicle == null) { return NotFound(); }
+
+            AdminRepo.FreeVehicleFromSingleEmployee(id,PltNum);
+            return Ok(vehicle);
+        }
+        //--------------------------------------------------------------------------------
     }
 }

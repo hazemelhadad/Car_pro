@@ -25,6 +25,7 @@ namespace CompanyVechile.Repositories
         List<EmployeesVehiclesDTO> GetOccupiedVehicles(int branchId);
         bool AssignEmpToVehicle(int employeeId, string vehiclePlateNumber, int branchId);
 
-        void FreeVehicleFromSingleEmployee();
+        void FreeVehicleFromEmployees(string PltNum);
+        void FreeVehicleFromSingleEmployee(int employeeId, string PltNum);
     }
 }
