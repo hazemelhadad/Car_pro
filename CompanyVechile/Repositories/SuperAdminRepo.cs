@@ -11,6 +11,7 @@ namespace CompanyVechile.Repositories
         {
             db = dbContext;
         }
+                //---------------------------------------------------------------------------------------BRANCHES--------------------------------------------------------------------------//
         //-------------------------------------------------------
         public List<BranchesDTO> GetAllCompanyBranches()
         {
@@ -57,6 +58,7 @@ namespace CompanyVechile.Repositories
             return true;
         }
         //-------------------------------------------------------
+                  //---------------------------------------------------------------------------------------EMPLOYEES--------------------------------------------------------------------------//
         public List<EmployeeDTO> GetAllEmps()
         {
             return db.Employees.Include(e => e.EmployeePhones).Select(e => new EmployeeDTO
@@ -154,6 +156,136 @@ namespace CompanyVechile.Repositories
             db.SaveChanges();
             return true;
         }
+                      //-----------------------------------------------------------------------------------VEHICLES----------------------------------------------------------------------------//
         //-------------------------------------------------------
+        public List<VehicleDTO> GetAllVehicles()
+        {
+            return db.Vehicle.Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID = v.Branch_ID
+            }).ToList();
+
+        }
+        //-------------------------------------------------------
+        public List<VehicleDTO> GetVehicleByPlateNumber(string PltNum)
+        {
+            return db.Vehicle.Where(v => v.Vehicle_PlateNumber.Contains(PltNum)).Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID = v.Branch_ID
+            }).ToList();
+        }
+        //-------------------------------------------------------
+        public List<VehicleDTO> GetVehicleByType(string type)
+        {
+            return db.Vehicle.Where(v => v.Vehicle_Type == type).Select(v => new VehicleDTO
+            {
+                Vehicle_PlateNumber = v.Vehicle_PlateNumber,
+                License_SerialNumber = v.License_SerialNumber,
+                License_Registeration = v.License_Registeration,
+                License_ExpirationDate = v.License_ExpirationDate,
+                Vehicle_ChassisNum = v.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = v.Vehicle_ManufactureYear,
+                Vehicle_BrandName = v.Vehicle_BrandName,
+                Vehicle_Color = v.Vehicle_Color,
+                Vehicle_Type = v.Vehicle_Type,
+                Vehicle_Insurance = v.Vehicle_Insurance,
+                Branch_ID = v.Branch_ID
+            }).ToList();
+        }
+        //-------------------------------------------------------
+        public bool AddVehicle(VehicleDTO vhc)
+        {
+            var vehicle = new Vehicle
+            {
+                Vehicle_PlateNumber = vhc.Vehicle_PlateNumber,
+                License_SerialNumber = vhc.License_SerialNumber,
+                License_Registeration = vhc.License_Registeration,
+                License_ExpirationDate = vhc.License_ExpirationDate,
+                Vehicle_ChassisNum = vhc.Vehicle_ChassisNum,
+                Vehicle_ManufactureYear = vhc.Vehicle_ManufactureYear,
+                Vehicle_BrandName = vhc.Vehicle_BrandName,
+                Vehicle_Color = vhc.Vehicle_Color,
+                Vehicle_Type = vhc.Vehicle_Type,
+                Vehicle_Insurance = vhc.Vehicle_Insurance,
+                Branch_ID = vhc.Branch_ID
+            };
+            
+            db.Vehicle.Add(vehicle);
+            db.SaveChanges();
+
+            return true;
+        }
+        //-------------------------------------------------------
+        public bool EditVhc(VehicleDTO vhc, string PltNum)
+        {
+            var oldVehicle = db.Vehicle.FirstOrDefault(v => v.Vehicle_PlateNumber == PltNum);
+            if (oldVehicle == null) { return false; }
+
+            //Before transferring a vehicle to another department, must check that the vehicle isn't being used by any employee currently.
+            var existInMMTable = db.EmployeesVehicles.Any(p => p.VehiclePlateNumber == PltNum);
+            if (existInMMTable) { return false; }
+
+            //No Edit for Vehicle PlateNumber, Primary Key
+            oldVehicle.Vehicle_Color = vhc.Vehicle_Color;
+            oldVehicle.Vehicle_ChassisNum = vhc.Vehicle_ChassisNum;
+            oldVehicle.Vehicle_BrandName = vhc.Vehicle_BrandName;
+            oldVehicle.License_SerialNumber = vhc.License_SerialNumber;
+            oldVehicle.License_ExpirationDate = vhc.License_ExpirationDate;
+            oldVehicle.License_Registeration = vhc.License_Registeration;
+            oldVehicle.License_SerialNumber = vhc.License_SerialNumber;
+            oldVehicle.Vehicle_Type = vhc.Vehicle_Type;
+            oldVehicle.Vehicle_ManufactureYear = vhc.Vehicle_ManufactureYear;
+            oldVehicle.Branch_ID = vhc.Branch_ID;
+
+            db.SaveChanges();
+            return true;
+        }
+        //-------------------------------------------------------
+        public bool DeleteVehicle(string PltNum)
+        {
+            var model = db.Vehicle.FirstOrDefault(v => v.Vehicle_PlateNumber == PltNum);
+            if (model == null) { return false; }
+
+            db.Vehicle.Remove(model);
+            db.SaveChanges();
+
+            return true;
+        }
+        //-------------------------------------------------------
+        //-----------------------------------------------------------------------------------OCCUPIED VEHICLES----------------------------------------------------------------------------//
+        public List<EmployeesVehiclesDTO> GetOccupiedVehicles()
+        {
+            var vehiclesInBranch = db.EmployeesVehicles.ToList();
+
+            var dtoList = vehiclesInBranch.Select(ev => new EmployeesVehiclesDTO
+            {
+                EmployeeId = ev.EmployeeId,
+                VehiclePlateNumber = ev.VehiclePlateNumber
+            }).ToList();
+
+            return dtoList;
+        }
+        //-------------------------------------------------------
+   
     }
 }

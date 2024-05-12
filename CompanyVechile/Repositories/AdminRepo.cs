@@ -111,7 +111,7 @@ namespace CompanyVechile.Repositories
 
             existingEmployee.Employee_Name = empDto.Employee_Name;
             existingEmployee.Employee_Birthday = empDto.Employee_Birthday;
-            existingEmployee.Employee_Role = empDto.Employee_Role;
+            //existingEmployee.Employee_Role = empDto.Employee_Role; No Change for Employee Role, Admin can't create another Admin.
             existingEmployee.Employee_Nationality = empDto.Employee_Nationality;
             existingEmployee.Employee_Street_Name = empDto.Employee_Street_Name;
             existingEmployee.Employee_BuildingNumber = empDto.Employee_BuildingNumber;

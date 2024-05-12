@@ -121,7 +121,7 @@ namespace CompanyVechile.Controllers
             var branchId = 1;   //Here,apply method to return actual branch ID from Token
             
             var model = AdminRepo.GetVehicleByType(type, branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبات"); }
+            if (model == null) { return NotFound("لم يتم العثور على المركبات بهذا النوع"); }
 
             return Ok(model);
         }
@@ -133,7 +133,7 @@ namespace CompanyVechile.Controllers
 
             if (vhc.Branch_ID != branchId)
             {
-                return BadRequest("لا يمكن إضافة مركبة إلى فرع مختلف");
+                return BadRequest("لا يمكن إضافة مركبة إلى فرع مختلف عن فرعك.");
             }
 
             AdminRepo.AddVehicle(vhc);

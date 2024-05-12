@@ -17,5 +17,16 @@ namespace CompanyVechile.Repositories
         bool EditEmployee(EmployeeDTO empDto, int id);
         void AddEmp(EmployeeDTO empDto);
         bool DeleteEmp(int id);
+
+        //Vehicles Region
+        List<VehicleDTO> GetAllVehicles();
+        List<VehicleDTO> GetVehicleByPlateNumber(string PltNum);
+        List<VehicleDTO> GetVehicleByType(string type);
+        bool AddVehicle(VehicleDTO vhc);
+        bool EditVhc(VehicleDTO vhc, string PltNum);
+        bool DeleteVehicle(string PltNum);
+
+        //-----EmployeeVehicles Region----
+        List<EmployeesVehiclesDTO> GetOccupiedVehicles();
     }
 }

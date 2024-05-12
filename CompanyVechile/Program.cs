@@ -12,7 +12,14 @@ builder.Services.AddDbContext<CompanyDBContext>(options => options.UseSqlServer(
 builder.Services.AddScoped<IAdminRepo, AdminRepo>(); // Registering the AdminRepo implementation with the interface
 builder.Services.AddScoped<ISuperAdminRepo, SuperAdminRepo>(); // Registering the SuperAdminRepo implementation with the interface
 
-
+// Adding CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
