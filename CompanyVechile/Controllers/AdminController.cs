@@ -42,6 +42,7 @@ namespace CompanyVechile.Controllers
 
             var model = AdminRepo.GetAll(branchId);
             if (model == null) { return NotFound("لم يتم العثور على الموظفين"); }
+            if (model.Count < 1) { return NotFound("لا يوجد موظفين في فرعك"); }
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
@@ -89,15 +90,19 @@ namespace CompanyVechile.Controllers
                 return Ok(model);
             }
             else {  return BadRequest("لا يمكن اضافه وظيفه للموظف غير السائق"); }
-           
         }
         //--------------------------------------------------------------------------------
         [HttpPut("/api/AdminController/UpdateEmployeeData/{id}")] //id Sent in url
         [Authorize(Roles = "Admin")]
         public IActionResult EditEmployee(AdminEmployeeDTO empDto, string id) //sent in body of Request (empDTO)
         {
+            var branchId = GetBranchIdFromToken();
+
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+
             if (empDto == null) { return BadRequest("طلب غير صحيح"); }
             if (empDto.Employee_ID != id) { return BadRequest("طلب غير صحيح"); }
+            if (empDto.Branch_ID != branchId) { return BadRequest("لا يمكنك تغيير الفرع للموظف"); }
 
             AdminRepo.EditEmp(empDto, id); 
 
@@ -133,7 +138,7 @@ namespace CompanyVechile.Controllers
             if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetAllVehicles(branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبات"); };
+            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك"); }
 
             return Ok(model);
         }
@@ -149,6 +154,7 @@ namespace CompanyVechile.Controllers
             var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبة"); };
 
+            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك بهذه الرخصه"); }
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
@@ -161,7 +167,7 @@ namespace CompanyVechile.Controllers
             if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetVehicleByType(type, branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبات بهذا النوع"); }
+            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك بهذا النوع"); }
 
             return Ok(model);
         }
@@ -187,8 +193,14 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "Admin")]//PltNum sent in URL
         public IActionResult EditVehicle(VehicleDTO vhc, string PltNum) //sent in body of Request (vhc)
         {
+            var branchId = GetBranchIdFromToken();
+
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+
             if (vhc == null) { return BadRequest("طلب غير صحيح"); }
             if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest("طلب غير صحيح"); }
+
+            if (vhc.Branch_ID != branchId) { return BadRequest("لا يمكنك تغيير الفرع للمركبه"); }
 
             AdminRepo.EditVhc(vhc, PltNum);
 
@@ -219,7 +231,7 @@ namespace CompanyVechile.Controllers
             if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetOccupiedVehicles(branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
+            if (model.Count < 1) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
 
             return Ok(model);
         }
@@ -234,10 +246,7 @@ namespace CompanyVechile.Controllers
 
             bool success = AdminRepo.AssignEmpToVehicle(evo.EmployeeId, evo.VehiclePlateNumber, branchId);
 
-            if (!success)
-            {
-                return BadRequest("فشل في تعيين الموظف إلى المركبة.");
-            }
+            if (!success) { return BadRequest("فشل في تعيين الموظف إلى المركبة."); }
 
             return Ok(evo);
         }
@@ -253,8 +262,10 @@ namespace CompanyVechile.Controllers
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
 
-            AdminRepo.FreeVehicleFromEmployees(PltNum);
-            return Ok(vehicle);
+            var bol = AdminRepo.FreeVehicleFromEmployees(PltNum);
+
+            if (bol) { return Ok("تم تحرير السياره من جميع الموظفين"); }
+            else { return BadRequest("لا يوجد موظفين/موظف يستعملون تلك المركبه"); }
         }
         //--------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/FreeTheVehicleFromSingleEmployee/{id}/{PltNum}")]
@@ -268,8 +279,10 @@ namespace CompanyVechile.Controllers
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
 
-            AdminRepo.FreeVehicleFromSingleEmployee(id, PltNum);
-            return Ok(vehicle);
+            var bol = AdminRepo.FreeVehicleFromSingleEmployee(id, PltNum);
+
+            if (bol) { return Ok($" تم تحرير السياره من الموظف "); }
+            else { return BadRequest("فشلت العمليه"); }
         }
         //--------------------------------------------------------------------------------
     }

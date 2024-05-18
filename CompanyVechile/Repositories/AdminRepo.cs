@@ -40,7 +40,7 @@ namespace CompanyVechile.Repositories
         public AdminEmployeeDTO GetEmpByID(string id, int branchId)
         {
             var employee = db.Employees
-                             .Where(e => e.Employee_ID == id && e.Branch_ID == branchId)
+                             .Where(e => e.Employee_ID.Contains(id) && e.Branch_ID == branchId)
                              .Include(e => e.EmployeePhones)
                              .Select(e => new AdminEmployeeDTO
                              {
@@ -174,7 +174,7 @@ namespace CompanyVechile.Repositories
         //-------------------------------------------------------
         public List<VehicleDTO> GetVehicleByType(string type, int branchId)
         {
-            return db.Vehicle.Where(v => v.Vehicle_Type == type && v.Branch_ID == branchId).Select(v => new VehicleDTO
+            return db.Vehicle.Where(v => v.Vehicle_Type.Contains(type) && v.Branch_ID == branchId).Select(v => new VehicleDTO
             {
                 Vehicle_PlateNumber = v.Vehicle_PlateNumber,
                 License_SerialNumber = v.License_SerialNumber,
@@ -271,26 +271,25 @@ namespace CompanyVechile.Repositories
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        }
 
+            else { return false; }
+        }
         //-------------------------------------------------------
-        public void FreeVehicleFromEmployees(string PltNum)
+        public bool FreeVehicleFromEmployees(string PltNum) 
         {
             var models = db.EmployeesVehicles.Where(ev => ev.VehiclePlateNumber == PltNum).ToList();
 
-            if (models.Count < 1) 
+            if (models.Count > 1) 
             {
                 db.EmployeesVehicles.RemoveRange(models);   //"Remove" removes 1 record, "RemoveRange" removes more than 1 record
                 db.SaveChanges();
+
+                return true;
             }
-            else { return; }
+            else { return false; }
         }
         //-------------------------------------------------------
-        public void FreeVehicleFromSingleEmployee(string employeeId, string PltNum)
+        public bool FreeVehicleFromSingleEmployee(string employeeId, string PltNum)
         {
             var employeeVehicle = db.EmployeesVehicles.FirstOrDefault(ev => ev.EmployeeId == employeeId && ev.VehiclePlateNumber == PltNum);
 
@@ -298,12 +297,11 @@ namespace CompanyVechile.Repositories
             {
                 db.EmployeesVehicles.Remove(employeeVehicle);
                 db.SaveChanges();
+                return true;
             }
 
-            else { return; }
+            else { return false; }
         }
-
-       
         //-------------------------------------------------------
     }
 }

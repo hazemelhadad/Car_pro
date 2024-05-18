@@ -25,8 +25,7 @@ namespace CompanyVechile.Repositories
         //-----EmployeeVehicles Region----
         List<EmployeesVehiclesDTO> GetOccupiedVehicles(int branchId);
         bool AssignEmpToVehicle(string employeeId, string vehiclePlateNumber, int branchId);
-
-        void FreeVehicleFromEmployees(string PltNum);
-        void FreeVehicleFromSingleEmployee(string employeeId, string PltNum);
+        bool FreeVehicleFromEmployees(string PltNum);
+        bool FreeVehicleFromSingleEmployee(string employeeId, string PltNum);
     }
 }
