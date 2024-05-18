@@ -38,7 +38,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetAll(branchId);
             if (model == null) { return NotFound("لم يتم العثور على الموظفين"); }
@@ -51,7 +51,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetEmpByID(id,branchId);
             if (model == null) { return NotFound("لم يتم العثور على الموظف"); }
@@ -64,7 +64,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetEmpByName(name,branchId);
             if (model == null) { return NotFound("لم يتم العثور على الموظف"); }
@@ -77,7 +77,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             if (empDto == null) { return BadRequest(); }
 
@@ -110,7 +110,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetEmpByID(id, branchId);
 
@@ -130,7 +130,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetAllVehicles(branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبات"); };
@@ -144,7 +144,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبة"); };
@@ -158,7 +158,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetVehicleByType(type, branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبات بهذا النوع"); }
@@ -172,7 +172,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             if (vhc.Branch_ID != branchId)
             {
@@ -201,7 +201,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبة"); }
@@ -216,7 +216,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var model = AdminRepo.GetOccupiedVehicles(branchId);
             if (model == null) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
@@ -230,7 +230,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             bool success = AdminRepo.AssignEmpToVehicle(evo.EmployeeId, evo.VehiclePlateNumber, branchId);
 
@@ -248,7 +248,7 @@ namespace CompanyVechile.Controllers
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
@@ -259,16 +259,16 @@ namespace CompanyVechile.Controllers
         //--------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/FreeTheVehicleFromSingleEmployee/{id}/{PltNum}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult FreeVehicleFromOne (string id,string PltNum)
+        public IActionResult FreeVehicleFromOne(string id, string PltNum)
         {
             var branchId = GetBranchIdFromToken();
 
-            if (branchId == 0) { return Unauthorized("Branch ID not found in token."); }
+            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
 
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
             if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
 
-            AdminRepo.FreeVehicleFromSingleEmployee(id,PltNum);
+            AdminRepo.FreeVehicleFromSingleEmployee(id, PltNum);
             return Ok(vehicle);
         }
         //--------------------------------------------------------------------------------

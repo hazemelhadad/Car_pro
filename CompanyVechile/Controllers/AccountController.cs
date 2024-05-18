@@ -31,16 +31,16 @@ namespace CompanyVechile.Controllers
             this.adminRepo = adminRepo;
             _jwtSettings = jwtSettings;
         }
-      //------------------------------------------------------------------------------------------------------
-
+        //------------------------------------------------------------------------------------------------------
         [HttpPost("register")]
         public async Task<IActionResult> registration(registerUserDTO registerDto)
         {
             var applicationUser = new applicationUser();
 
-            if (await userManager.FindByNameAsync(registerDto.EmployeeID) != null) { return BadRequest("UserName already Exists"); }
+            if (await userManager.FindByNameAsync(registerDto.EmployeeID) != null) { return BadRequest("اسم المستخدم موجود بالفعل"); }
 
-            try {
+            try
+            {
                 applicationUser.UserName = registerDto.EmployeeID;
 
                 IdentityResult user = await userManager.CreateAsync(applicationUser, registerDto.Password);
@@ -48,13 +48,14 @@ namespace CompanyVechile.Controllers
                 if (user.Succeeded)
                 {
                     await assignRole(applicationUser);
-                    return Ok("Register Success");
+                    return Ok("تم التسجيل بنجاح");
                 }
 
-                else { return BadRequest("register failed"); }
+                else { return BadRequest("فشل التسجيل"); }
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
+
         //------------------------------------------------------------------------------------------------------
         private async Task assignRole(applicationUser user)
         {
@@ -70,25 +71,27 @@ namespace CompanyVechile.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Logining(loginUserDTO userDTO)
         {
-            if (userDTO == null) { return BadRequest("Invalid login request."); }
+            if (userDTO == null) { return BadRequest("طلب تسجيل الدخول غير صالح."); }
 
             var user = await userManager.FindByNameAsync(userDTO.employeeID);
 
-            if (user == null) { return BadRequest("Username doesn't exist"); }
+            if (user == null) { return BadRequest("اسم المستخدم غير موجود"); }
 
-            if ( await userManager.CheckPasswordAsync(user, userDTO.password) ) {
+            if (await userManager.CheckPasswordAsync(user, userDTO.password))
+            {
                 var employee = adminRepo.GetEmpByID(userDTO.employeeID);
 
-                if (employee == null) { return BadRequest("Employee not found in the database."); }
+                if (employee == null) { return BadRequest("الموظف غير موجود في قاعدة البيانات."); }
 
-                if (!employee.Branch_ID.HasValue) { return BadRequest("Employee does not have a branch ID."); }
+                if (!employee.Branch_ID.HasValue) { return BadRequest("الموظف ليس لديه معرف فرع."); }
 
                 var branchId = employee.Branch_ID.Value;
                 var token = await GenerateJwtToken(user, branchId);
                 return Ok(new { Token = token });
             }
-            else { return BadRequest("Incorrect password"); }
+            else { return BadRequest("كلمة المرور غير صحيحة"); }
         }
+
         //------------------------------------------------------------------------------------------------------
         private async Task<string> GenerateJwtToken(applicationUser user , int branchId)
         {
@@ -99,6 +102,7 @@ namespace CompanyVechile.Controllers
                 new Claim("BranchId", branchId.ToString()),
                 new Claim(ClaimTypes.Role, Guid.NewGuid().ToString())
             };
+
             if(roles != null)
             {
                 foreach(var role in roles) {

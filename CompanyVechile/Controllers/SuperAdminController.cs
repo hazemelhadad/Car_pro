@@ -36,7 +36,7 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult AddBranch(NewBranchesDTO brDTO)
         {
-            if (brDTO == null) { return BadRequest(); }
+            if (brDTO == null) { return BadRequest("طلب غير صالح."); }
 
             SuperAdminRepo.AddNewBranch(brDTO);
             return Ok(brDTO);
@@ -47,7 +47,7 @@ namespace CompanyVechile.Controllers
         public IActionResult EditBranch(BranchesDTO brDTO, int BranchID)
         {
             if (brDTO == null) { return BadRequest("لا يمكن إضافة فرع جديد. البيانات المقدمة غير صالحة."); }
-            if (brDTO.Branch_ID != BranchID) { return BadRequest(); }
+            if (brDTO.Branch_ID != BranchID) { return BadRequest("لا يمكن تعديل الفرع. البيانات المقدمة غير صالحة."); }
 
             var bol = SuperAdminRepo.EditBranch(brDTO, BranchID);
             if (bol == true) { return Ok(brDTO); }
@@ -99,10 +99,8 @@ namespace CompanyVechile.Controllers
             if (empDto.Employee_ID != id) return BadRequest($"الموظف غير موجود. لا يمكن حذف موظف غير موجود.");
 
             var boolean = SuperAdminRepo.EditEmployee(empDto, id);
-            if (boolean == true)
-            {
-                return Ok(empDto);
-            }
+
+            if (boolean == true) { return Ok(empDto); }
             else { return BadRequest($"لديه مركبه في عهدته, برجاء اخلاء المركبه أولا. {id} :الموظف الذي لديه رقم قومي"); }
         }
         //--------------------------------------------------------------------------------
@@ -110,18 +108,18 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AddEmployeeAsync(EmployeeDTO empDto)
         {
-            if (empDto == null) { return BadRequest(); }
+            if (empDto == null) { return BadRequest("البيانات المقدمة غير صالحة."); }
 
             var res = await addLoginToEmployee(empDto);
-            if (res == "RegisterSuccess")
+            if (res == "تم التسجيل بنجاح")
             {
                 var userId = userManager.FindByNameAsync(empDto.Employee_ID).Result.Id;
                 empDto.UserId = userId;
                 SuperAdminRepo.AddEmp(empDto);
                 var model = SuperAdminRepo.GetAllEmps();
                 return Ok(model);
-
             }
+
             else { return BadRequest(res); }
         }
         //--------------------------------------------------------------------------------
@@ -129,7 +127,7 @@ namespace CompanyVechile.Controllers
         {
             var createdResult = "";
 
-            if (await userManager.FindByNameAsync(empDto.Employee_ID) != null) { createdResult = "Username already exists"; }
+            if (await userManager.FindByNameAsync(empDto.Employee_ID) != null) { createdResult = "اسم المستخدم موجود بالفعل"; }
 
             try
             {
@@ -139,11 +137,11 @@ namespace CompanyVechile.Controllers
 
                 if (user.Succeeded)
                 {
-                    if (assignRole(applicationUser).Result.Succeeded) { createdResult = "RegisterSuccess"; }
-                    else { createdResult = "register failed"; }
+                    if (assignRole(applicationUser).Result.Succeeded) { createdResult = "تم التسجيل بنجاح"; }
+                    else { createdResult = "فشل التسجيل"; }
                 }
 
-                else { createdResult = "register failed"; }
+                else { createdResult = "فشل التسجيل"; }
             }
 
             catch (Exception ex) { createdResult = ex.Message; }
@@ -226,7 +224,7 @@ namespace CompanyVechile.Controllers
 
             var boolean = SuperAdminRepo.EditVhc(vhc, PltNum);
             if (boolean == true) { return Ok(vhc); }
-            else { return BadRequest("Cant transfer vehicle to a different branch before removing employees from it"); }
+            else { return BadRequest("لا يمكن نقل المركبة إلى فرع مختلف قبل إزالة الموظفين منها"); }
          
         }
         //--------------------------------------------------------------------------------
@@ -240,9 +238,9 @@ namespace CompanyVechile.Controllers
             var boolean = SuperAdminRepo.DeleteVehicle(PltNum);
             if(boolean == true)
             {
-                return Ok("Deleted Successfully");
+                return Ok("تم حذف المركبة");
             }
-            else { return BadRequest("Vehicle couldnt be deleted"); }
+            else { return BadRequest("تعذر حذف المركبة"); }
         }
         //--------------------------------------------------------------------------------
         [HttpGet("/api/SuperAdminController/GetAllVehiclesInUse")]
@@ -251,7 +249,7 @@ namespace CompanyVechile.Controllers
         {
             var model = SuperAdminRepo.GetOccupiedVehicles();
             if (model == null) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
-            if (model.Count < 1) { return Ok("No cars found"); }
+            if (model.Count < 1) { return Ok("لم يتم العثور على أي مركبه مستخدمه"); }
 
             return Ok(model);
         }
