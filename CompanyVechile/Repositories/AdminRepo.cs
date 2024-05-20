@@ -20,7 +20,7 @@ namespace CompanyVechile.Repositories
         {
             return db.Employees
                      .Include(e => e.EmployeePhones)
-                     .Where(e => e.Branch_ID == branchId)
+                     .Where(e => e.Branch_ID == branchId && e.Employee_Role == "Driver")
                      .Select(e => new AdminEmployeeDTO
                      {
                          Employee_ID = e.Employee_ID,
@@ -37,10 +37,10 @@ namespace CompanyVechile.Repositories
                      .ToList();
         }
         //-------------------------------------------------------
-        public AdminEmployeeDTO GetEmpByID(string id, int branchId)
+        public List<AdminEmployeeDTO> GetEmpByID(string id, int branchId)
         {
             var employee = db.Employees
-                             .Where(e => e.Employee_ID.Contains(id) && e.Branch_ID == branchId)
+                             .Where(e => e.Employee_ID.Contains(id) && e.Branch_ID == branchId && e.Employee_Role == "Driver")
                              .Include(e => e.EmployeePhones)
                              .Select(e => new AdminEmployeeDTO
                              {
@@ -55,7 +55,7 @@ namespace CompanyVechile.Repositories
                                  Branch_ID = e.Branch_ID == null ? 0 : e.Branch_ID.Value,
                                  EmployeePhones = e.EmployeePhones.Select(p => p.Employee_PhoneNumber).ToList()
                              })
-                             .FirstOrDefault();
+                             .ToList();
 
             return employee; 
         }
@@ -68,7 +68,7 @@ namespace CompanyVechile.Repositories
         public List<AdminEmployeeDTO> GetEmpByName(string name, int branchId)
         {
             return db.Employees
-                     .Where(e => e.Employee_Name.Contains(name) && e.Branch_ID == branchId )
+                     .Where(e => e.Employee_Name.Contains(name) && e.Branch_ID == branchId && e.Employee_Role == "Driver")
                      .Include(e => e.EmployeePhones)
                      .Select(e => new AdminEmployeeDTO
                      {

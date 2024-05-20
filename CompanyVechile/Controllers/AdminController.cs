@@ -23,7 +23,7 @@ namespace CompanyVechile.Controllers
             this.roleManager = roleManager;
         }
         //--------------------------------------------------------------------------------
-        private int GetBranchIdFromToken()
+        private int GetBranchIdFromToken()  //Method to extract the branch ID from the token.
         {
             var branchIdClaim = User.Claims.FirstOrDefault(c => c.Type == "BranchId");
 
@@ -74,7 +74,7 @@ namespace CompanyVechile.Controllers
         //--------------------------------------------------------------------------------
         [HttpPost("/api/AdminController/AddEmployee")]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddEmployee(AdminEmployeeDTO empDto)
+        public IActionResult AddEmployee(AdminEmployeeDTO empDto)   //Adds a driver to the database (without claims, he won't login)
         {
             var branchId = GetBranchIdFromToken();
 
@@ -111,7 +111,7 @@ namespace CompanyVechile.Controllers
         //--------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/DeleteEmployee/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteEmployee(string id)
+        public IActionResult DeleteEmployee(string id)          //Deletes Driver, but must not have any car in his possesion
         {
             var branchId = GetBranchIdFromToken();
 

@@ -7,7 +7,7 @@ namespace CompanyVechile.Repositories
     {
         //----Employees Region----
         List<AdminEmployeeDTO> GetAll(int branchId);
-        AdminEmployeeDTO GetEmpByID(string id, int branchId);
+        List<AdminEmployeeDTO> GetEmpByID(string id, int branchId);
         Employees GetEmpByID(string id);
         List<AdminEmployeeDTO> GetEmpByName(string name, int branchId);
         void AddEmp(AdminEmployeeDTO empDto);
