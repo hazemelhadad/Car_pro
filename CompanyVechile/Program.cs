@@ -17,20 +17,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompanyDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
 builder.Services.AddScoped<IAdminRepo, AdminRepo>(); // Registering the AdminRepo implementation with the interface
 builder.Services.AddScoped<ISuperAdminRepo, SuperAdminRepo>(); // Registering the SuperAdminRepo implementation with the interface
-//hazem
+
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
 
 builder.Services.AddSingleton(jwtSettings);
-
-// Adding CORS policy
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin", builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
 
 builder.Services.AddIdentity<applicationUser,IdentityRole>().AddEntityFrameworkStores<CompanyDBContext>();
 
@@ -94,6 +85,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+// Adding CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CompanyVechile.Migrations
 {
     /// <inheritdoc />
-    public partial class NEW : Migration
+    public partial class addederrormessages : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

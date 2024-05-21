@@ -12,278 +12,248 @@ namespace CompanyVechile.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        IAdminRepo AdminRepo;
+        private readonly IAdminRepo AdminRepo;
         private readonly UserManager<applicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        //--------------------------------------------------------------------------------
-        public AdminController( IAdminRepo _AdminRepo,  RoleManager<IdentityRole> roleManager, UserManager<applicationUser> userManager)
+
+        public AdminController(IAdminRepo _AdminRepo, RoleManager<IdentityRole> roleManager, UserManager<applicationUser> userManager)
         {
             AdminRepo = _AdminRepo;
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
-        //--------------------------------------------------------------------------------
-        private int GetBranchIdFromToken()  //Method to extract the branch ID from the token.
+
+        private int GetBranchIdFromToken()
         {
             var branchIdClaim = User.Claims.FirstOrDefault(c => c.Type == "BranchId");
-
-            if ( branchIdClaim != null && int.TryParse(branchIdClaim.Value, out int branchId) ) { return branchId; }
+            if (branchIdClaim != null && int.TryParse(branchIdClaim.Value, out int branchId))
+            {
+                return branchId;
+            }
             return 0;
         }
-        //--------------------------------------------------------------------------------
-        [HttpGet("/api/AdminController/GetAllEmployeesByBranch")]   //Returns all Employees in Database (for logged in Admin Branch_ID)
-        [Authorize(Roles = "Admin")]
 
+        [HttpGet("/api/AdminController/GetAllEmployeesByBranch")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllEmployees()
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetAll(branchId);
-            if (model == null) { return NotFound("لم يتم العثور على الموظفين"); }
-            if (model.Count < 1) { return NotFound("لا يوجد موظفين في فرعك"); }
+            if (model == null || model.Count < 1) { return NotFound(new { error = "لا يوجد موظفين في فرعك" }); }
+
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
-        [HttpGet("/api/AdminController/GetEmployeeByHisNationalID/{id}")]   //Returns Employee by searching his ID
+
+        [HttpGet("/api/AdminController/GetEmployeeByHisNationalID/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetEmployeeById(string id) 
+        public IActionResult GetEmployeeById(string id)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            var model = AdminRepo.GetEmpByID(id, branchId);
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على الموظف" }); }
 
-            var model = AdminRepo.GetEmpByID(id,branchId);
-            if (model == null) { return NotFound("لم يتم العثور على الموظف"); }
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
-        [HttpGet("/api/AdminController/GetEmployeeByHisName/{name}")]   //Returns Employee by searching his Name
+
+        [HttpGet("/api/AdminController/GetEmployeeByHisName/{name}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetEmployeeByName(string name)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            var model = AdminRepo.GetEmpByName(name, branchId);
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على الموظف" }); }
 
-            var model = AdminRepo.GetEmpByName(name,branchId);
-            if (model == null) { return NotFound("لم يتم العثور على الموظف"); }
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpPost("/api/AdminController/AddEmployee")]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddEmployee(AdminEmployeeDTO empDto)   //Adds a driver to the database (without claims, he won't login)
+        public IActionResult AddEmployee(AdminEmployeeDTO empDto)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (empDto == null) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
+            if (empDto.Branch_ID != branchId) { return BadRequest(new { error = "لا يمكن إضافة موظف إلى فرع مختلف." }); }
+            if (empDto.Employee_Role != "Driver") { return BadRequest(new { error = "لا يمكن إضافة وظيفة للموظف غير السائق." }); }
 
-            if (empDto == null) { return BadRequest(); }
-
-            if (empDto.Branch_ID != branchId) { return BadRequest("لا يمكن إضافة موظف إلى فرع مختلف"); }
-
-            if (empDto.Employee_Role == "Driver") {
-                AdminRepo.AddEmp(empDto);
-                var model = AdminRepo.GetAll(branchId);
-                return Ok(model);
-            }
-            else {  return BadRequest("لا يمكن اضافه وظيفه للموظف غير السائق"); }
+            AdminRepo.AddEmp(empDto);
+            var model = AdminRepo.GetAll(branchId);
+            return Ok(model);
         }
-        //--------------------------------------------------------------------------------
-        [HttpPut("/api/AdminController/UpdateEmployeeData/{id}")] //id Sent in url
+
+        [HttpPut("/api/AdminController/UpdateEmployeeData/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult EditEmployee(AdminEmployeeDTO empDto, string id) //sent in body of Request (empDTO)
+        public IActionResult EditEmployee(AdminEmployeeDTO empDto, string id)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (empDto == null) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
+            if (empDto.Employee_ID != id) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
+            if (empDto.Branch_ID != branchId) { return BadRequest(new { error = "لا يمكنك تغيير الفرع للموظف." }); }
 
-            if (empDto == null) { return BadRequest("طلب غير صحيح"); }
-            if (empDto.Employee_ID != id) { return BadRequest("طلب غير صحيح"); }
-            if (empDto.Branch_ID != branchId) { return BadRequest("لا يمكنك تغيير الفرع للموظف"); }
-
-            AdminRepo.EditEmp(empDto, id); 
-
+            AdminRepo.EditEmp(empDto, id);
             return Ok(empDto);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpDelete("/api/AdminController/DeleteEmployee/{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteEmployee(string id)          //Deletes Driver, but must not have any car in his possesion
+        public IActionResult DeleteEmployee(string id)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetEmpByID(id, branchId);
-
-            if (model == null) { return NotFound("لم يتم العثور على الموظف"); }
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على الموظف." }); }
 
             AdminRepo.DeleteEmp(id);
             return Ok(model);
         }
 
-        //--------------------------------------------------------------------------------
-                    //----------------------VEHICLES----------------------//
-        //--------------------------------------------------------------------------------
-
-        [HttpGet("/api/AdminController/GetAllVehiclesByBranch/")]
+        [HttpGet("/api/AdminController/GetAllVehiclesByBranch")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllBranchVehicles()
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetAllVehicles(branchId);
-            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك"); }
+            if (model.Count < 1) { return NotFound(new { error = "لا يوجد مركبات في فرعك." }); }
 
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpGet("/api/AdminController/GetVehicleByPltNum/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetVehicleByPlateNumberViaBranch(string PltNum)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبة"); };
+            if (model == null || model.Count < 1) { return NotFound(new { error = "لم يتم العثور على المركبة." }); }
 
-            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك بهذه الرخصه"); }
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpGet("/api/AdminController/GetVehicleByType/{type}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetVehicleByType(string type)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetVehicleByType(type, branchId);
-            if (model.Count < 1) { return NotFound("لا يوجد مركبات في فرعك بهذا النوع"); }
+            if (model.Count < 1) { return NotFound(new { error = "لا يوجد مركبات في فرعك بهذا النوع." }); }
 
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpPost("/api/AdminController/AddVehicle")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddVehicleForBranch(VehicleDTO vhc)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
-
-            if (vhc.Branch_ID != branchId)
-            {
-                return BadRequest("لا يمكن إضافة مركبة إلى فرع مختلف عن فرعك.");
-            }
+            if (vhc.Branch_ID != branchId) { return BadRequest(new { error = "لا يمكن إضافة مركبة إلى فرع مختلف عن فرعك." }); }
 
             AdminRepo.AddVehicle(vhc);
             return Ok(vhc);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpPut("/api/AdminController/UpdateVehicleData/{PltNum}")]
-        [Authorize(Roles = "Admin")]//PltNum sent in URL
-        public IActionResult EditVehicle(VehicleDTO vhc, string PltNum) //sent in body of Request (vhc)
+        [Authorize(Roles = "Admin")]
+        public IActionResult EditVehicle(VehicleDTO vhc, string PltNum)
         {
             var branchId = GetBranchIdFromToken();
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
-
-            if (vhc == null) { return BadRequest("طلب غير صحيح"); }
-            if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest("طلب غير صحيح"); }
-
-            if (vhc.Branch_ID != branchId) { return BadRequest("لا يمكنك تغيير الفرع للمركبه"); }
+            if (vhc == null) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
+            if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
+            if (vhc.Branch_ID != branchId) { return BadRequest(new { error = "لا يمكنك تغيير الفرع للمركبة." }); }
 
             AdminRepo.EditVhc(vhc, PltNum);
-
             return Ok(vhc);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpDelete("/api/AdminController/DeleteVehicle/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteVehicles(string PltNum)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
-            if (model == null) { return NotFound("لم يتم العثور على المركبة"); }
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبة." }); }
 
-            AdminRepo.DeleteVehicle(PltNum);    
+            AdminRepo.DeleteVehicle(PltNum);
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpGet("/api/AdminController/GetAllVehiclesInUse")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllVehiclesInUse()
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var model = AdminRepo.GetOccupiedVehicles(branchId);
-            if (model.Count < 1) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
+            if (model.Count < 1) { return NotFound(new { error = "لم يتم العثور على المركبات المستخدمة." }); }
 
             return Ok(model);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpPost("/api/AdminController/AssignEmployeeToVehicle")]
         [Authorize(Roles = "Admin")]
         public IActionResult AssignEmployeeToVehicle(EmployeesVehiclesDTO evo)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             bool success = AdminRepo.AssignEmpToVehicle(evo.EmployeeId, evo.VehiclePlateNumber, branchId);
-
-            if (!success) { return BadRequest("فشل في تعيين الموظف إلى المركبة."); }
+            if (!success) { return BadRequest(new { error = "فشل في تعيين الموظف إلى المركبة." }); }
 
             return Ok(evo);
         }
-        //--------------------------------------------------------------------------------
+
         [HttpDelete("/api/AdminController/FreeTheVehicleFromAllEmployees/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult FreeVehicle(string PltNum)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
-            if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
+            if (vehicle == null) { return NotFound(new { error = "لم يتم العثور على المركبة." }); }
 
             var bol = AdminRepo.FreeVehicleFromEmployees(PltNum);
+            if (bol) { return Ok(new { message = "تم تحرير السياره من جميع الموظفين." }); }
 
-            if (bol) { return Ok("تم تحرير السياره من جميع الموظفين"); }
-            else { return BadRequest("لا يوجد موظفين/موظف يستعملون تلك المركبه"); }
+            return BadRequest(new { error = "لا يوجد موظفين/موظف يستعملون تلك المركبة." });
         }
-        //--------------------------------------------------------------------------------
+
         [HttpDelete("/api/AdminController/FreeTheVehicleFromSingleEmployee/{id}/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult FreeVehicleFromOne(string id, string PltNum)
         {
             var branchId = GetBranchIdFromToken();
-
-            if (branchId == 0) { return Unauthorized("معرف الفرع غير موجود في الرمز المميز."); }
+            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
             var vehicle = AdminRepo.GetVehicleByPlateNumber(PltNum, branchId);
-            if (vehicle == null) { return NotFound("لم يتم العثور على المركبة"); }
+            if (vehicle == null) { return NotFound(new { error = "لم يتم العثور على المركبة." }); }
 
             var bol = AdminRepo.FreeVehicleFromSingleEmployee(id, PltNum);
+            if (bol) { return Ok(new { message = "تم تحرير السياره من الموظف." }); }
 
-            if (bol) { return Ok($" تم تحرير السياره من الموظف "); }
-            else { return BadRequest("فشلت العمليه"); }
+            return BadRequest(new { error = "فشلت العمليه." });
         }
-        //--------------------------------------------------------------------------------
     }
 }

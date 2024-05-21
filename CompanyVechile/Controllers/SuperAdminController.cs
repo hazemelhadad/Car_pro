@@ -28,7 +28,7 @@ namespace CompanyVechile.Controllers
         public IActionResult GetAllBranches()
         {
             var model = SuperAdminRepo.GetAllCompanyBranches();
-            if (model == null) { return NotFound("لا توجد فروع متاحة."); }
+            if (model == null) { return NotFound(new { error = "لا توجد فروع متاحة." }); }
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult AddBranch(NewBranchesDTO brDTO)
         {
-            if (brDTO == null) { return BadRequest("طلب غير صالح."); }
+            if (brDTO == null) { return BadRequest(new { error = "طلب غير صالح." }); }
 
             SuperAdminRepo.AddNewBranch(brDTO);
             return Ok(brDTO);
@@ -46,35 +46,34 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult EditBranch(BranchesDTO brDTO, int BranchID)
         {
-            if (brDTO == null) { return BadRequest("لا يمكن إضافة فرع جديد. البيانات المقدمة غير صالحة."); }
-            if (brDTO.Branch_ID != BranchID) { return BadRequest("لا يمكن تعديل الفرع. البيانات المقدمة غير صالحة."); }
+            if (brDTO == null) { return BadRequest(new { error = "لا يمكن إضافة فرع جديد. البيانات المقدمة غير صالحة." }); }
+            if (brDTO.Branch_ID != BranchID) { return BadRequest(new { error = "لا يمكن تعديل الفرع. البيانات المقدمة غير صالحة." }); }
 
             var bol = SuperAdminRepo.EditBranch(brDTO, BranchID);
             if (bol == true) { return Ok(brDTO); }
 
-            else { return BadRequest("لا يمكن إضافة فرع جديد. البيانات المقدمة غير صالحة."); }
+            else { return BadRequest(new { error = "لا يمكن إضافة فرع جديد. البيانات المقدمة غير صالحة." }); }
         }
         //--------------------------------------------------------------------------------
         [HttpDelete("/api/SuperAdminController/DeleteBranch/{BranchID}")]
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult DeleteBranch(int? BranchID)
         {
-            if (BranchID == null || BranchID <= 0) { return BadRequest("يرجى توفير معرف فرع صحيح."); }
+            if (BranchID == null || BranchID <= 0) { return BadRequest(new { error = "يرجى توفير معرف فرع صحيح." }); }
 
             var deleted = SuperAdminRepo.DeleteBranch(BranchID.Value);
 
-            if (!deleted) { return NotFound($"الفرع ذو الرقم التعريفي {BranchID} غير موجود."); }
+            if (!deleted) { return NotFound(new { error = $"الفرع ذو الرقم التعريفي {BranchID} غير موجود." }); }
 
-            return Ok("تم حذف الفرع بنجاح.");
+            return Ok(new { message = "تم حذف الفرع بنجاح." });
         }
-
         //--------------------------------------------------------------------------------
         [HttpGet("/api/SuperAdminController/GetAllCompanyEmployees")]
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult GetAllCompanyEmployees()
         {
             var model = SuperAdminRepo.GetAllEmps();
-            if (model == null) { return NotFound("لا يوجد موظفين في الشركة."); }
+            if (model == null) { return NotFound(new { error = "لا يوجد موظفين في الشركة." }); }
 
             return Ok(model);
         }
@@ -86,7 +85,7 @@ namespace CompanyVechile.Controllers
         {
             var model = SuperAdminRepo.GetEmpByID(id);
 
-            if (model == null) { return NotFound("لا يوجد موظف برقم الهوية هذا في الشركة."); }
+            if (model == null) { return NotFound(new { error = "لا يوجد موظف برقم الهوية هذا في الشركة." }); }
 
             return Ok(model);
         }
@@ -95,20 +94,20 @@ namespace CompanyVechile.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult UpdateEmployees(EmployeeDTO empDto, string id)
         {
-            if (empDto == null) return BadRequest($"الموظف غير موجود. لا يمكن حذف موظف غير موجود.");
-            if (empDto.Employee_ID != id) return BadRequest($"الموظف غير موجود. لا يمكن حذف موظف غير موجود.");
+            if (empDto == null) return BadRequest(new { error = $"الموظف غير موجود. لا يمكن حذف موظف غير موجود." });
+            if (empDto.Employee_ID != id) return BadRequest(new { error = $"الموظف غير موجود. لا يمكن حذف موظف غير موجود." });
 
             var boolean = SuperAdminRepo.EditEmployee(empDto, id);
 
             if (boolean == true) { return Ok(empDto); }
-            else { return BadRequest($"لديه مركبه في عهدته, برجاء اخلاء المركبه أولا. {id} :الموظف الذي لديه رقم قومي"); }
+            else { return BadRequest(new { error = $"لديه مركبه في عهدته, برجاء اخلاء المركبه أولا. {id} :الموظف الذي لديه رقم قومي" }); }
         }
         //--------------------------------------------------------------------------------
         [HttpPost("/api/SuperAdminController/AddEmployee")]
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AddEmployeeAsync(EmployeeDTO empDto)
         {
-            if (empDto == null) { return BadRequest("البيانات المقدمة غير صالحة."); }
+            if (empDto == null) { return BadRequest(new { error = "البيانات المقدمة غير صالحة." }); }
 
             var res = await addLoginToEmployee(empDto);
             if (res == "تم التسجيل بنجاح")
@@ -120,7 +119,7 @@ namespace CompanyVechile.Controllers
                 return Ok(model);
             }
 
-            else { return BadRequest(res); }
+            else { return BadRequest(new { error = res }); }
         }
         //--------------------------------------------------------------------------------
         private async Task<string> addLoginToEmployee(EmployeeDTO empDto)
@@ -165,14 +164,14 @@ namespace CompanyVechile.Controllers
         {
             var model = SuperAdminRepo.GetEmpByID(id);
 
-            if (model == null) return BadRequest($"الموظف غير موجود. لا يمكن حذف موظف غير موجود.");
+            if (model == null) return BadRequest(new { error = $"الموظف غير موجود. لا يمكن حذف موظف غير موجود." });
 
             var boolean = SuperAdminRepo.DeleteEmp(id);
             if (boolean == true)
             {
                 return Ok(model);
             }
-            else { return BadRequest($"لديه مركبه في عهدته, برجاء اخلاء المركبه أولا {id} :الموظف الذي لديه رقم قومي"); }
+            else { return BadRequest(new { error = $"لديه مركبه في عهدته, برجاء اخلاء المركبه أولا {id} :الموظف الذي لديه رقم قومي" }); }
         }
         //--------------------------------------------------------------------------------
         [HttpGet("/api/SuperAdminController/GetAllVehicles")]
@@ -180,18 +179,17 @@ namespace CompanyVechile.Controllers
         public IActionResult GetAllCompanyVehicles()
         {
             var model = SuperAdminRepo.GetAllVehicles();
-            if (model == null) { return NotFound("لم يتم العثور على المركبات"); };
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبات" }); };
 
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
         [HttpGet("/api/SuperAdminController/GetVehicleByPltNum/{PltNum}")]
         [Authorize(Roles = "SuperAdmin")]
-
         public IActionResult GetVehicleByPlateNumberViaBranch(string PltNum)
         {
             var model = SuperAdminRepo.GetVehicleByPlateNumber(PltNum);
-            if (model == null) { return NotFound("لم يتم العثور على المركبة"); };
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبة" }); };
 
             return Ok(model);
         }
@@ -201,7 +199,7 @@ namespace CompanyVechile.Controllers
         public IActionResult GetVehicleByType(string type)
         {
             var model = SuperAdminRepo.GetVehicleByType(type);
-            if (model == null) { return NotFound("لم يتم العثور على المركبات"); }
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبات" }); }
 
             return Ok(model);
         }
@@ -212,20 +210,20 @@ namespace CompanyVechile.Controllers
         {
             var boolean = SuperAdminRepo.AddVehicle(vhc);
             if (boolean == true) { return Ok(vhc); }
-            else { return BadRequest("لا يوجد في الشؤكه فرع بهذا الرقم"); }   
+            else { return BadRequest(new { error = "لا يوجد في الشؤكه فرع بهذا الرقم" }); }
         }
         //--------------------------------------------------------------------------------
         [HttpPut("/api/SuperAdminController/UpdateVehicleData/{PltNum}")]
         [Authorize(Roles = "SuperAdmin")]//PltNum sent in URL
         public IActionResult EditVehicle(VehicleDTO vhc, string PltNum) //sent in body of Request (vhc)
         {
-            if (vhc == null) { return BadRequest("طلب غير صحيح"); }
-            if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest("طلب غير صحيح"); }
+            if (vhc == null) { return BadRequest(new { error = "طلب غير صحيح" }); }
+            if (vhc.Vehicle_PlateNumber != PltNum) { return BadRequest(new { error = "طلب غير صحيح" }); }
 
             var boolean = SuperAdminRepo.EditVhc(vhc, PltNum);
             if (boolean == true) { return Ok(vhc); }
-            else { return BadRequest("لا يمكن نقل المركبة إلى فرع مختلف قبل إزالة الموظفين منها"); }
-         
+            else { return BadRequest(new { error = "لا يمكن نقل المركبة إلى فرع مختلف قبل إزالة الموظفين منها" }); }
+
         }
         //--------------------------------------------------------------------------------
         [HttpDelete("/api/SuperAdminController/DeleteVehicle/{PltNum}")]
@@ -233,14 +231,14 @@ namespace CompanyVechile.Controllers
         public IActionResult DeleteVehicles(string PltNum)
         {
             var model = SuperAdminRepo.GetVehicleByPlateNumber(PltNum);
-            if (model == null) { return NotFound("لم يتم العثور على المركبة"); }
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبة" }); }
 
             var boolean = SuperAdminRepo.DeleteVehicle(PltNum);
-            if(boolean == true)
+            if (boolean == true)
             {
-                return Ok("تم حذف المركبة");
+                return Ok(new { message = "تم حذف المركبة" });
             }
-            else { return BadRequest("تعذر حذف المركبة"); }
+            else { return BadRequest(new { error = "تعذر حذف المركبة" }); }
         }
         //--------------------------------------------------------------------------------
         [HttpGet("/api/SuperAdminController/GetAllVehiclesInUse")]
@@ -248,13 +246,11 @@ namespace CompanyVechile.Controllers
         public IActionResult GetAllVehiclesInUse()
         {
             var model = SuperAdminRepo.GetOccupiedVehicles();
-            if (model == null) { return NotFound("لم يتم العثور على المركبات المستخدمة"); };
-            if (model.Count < 1) { return Ok("لم يتم العثور على أي مركبه مستخدمه"); }
+            if (model == null) { return NotFound(new { error = "لم يتم العثور على المركبات المستخدمة" }); }
+            if (model.Count < 1) { return Ok(new { message = "لم يتم العثور على أي مركبه مستخدمه" }); }
 
             return Ok(model);
         }
         //--------------------------------------------------------------------------------
-
-
     }
 }
