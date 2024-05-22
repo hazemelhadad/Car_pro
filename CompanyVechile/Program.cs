@@ -59,11 +59,9 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = JwtBearerDefaults.AuthenticationScheme
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
             {
-            {
-            new OpenApiSecurityScheme
-            {
+            new OpenApiSecurityScheme {
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
@@ -85,14 +83,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-// Adding CORS policy
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin", builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
+
+app.UseCors( x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader() ); 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
