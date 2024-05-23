@@ -35,7 +35,6 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-
         ValidateIssuer = jwtSettings.ValidateIssuer,
         ValidIssuers = new[] { jwtSettings.Issuer },
         ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,

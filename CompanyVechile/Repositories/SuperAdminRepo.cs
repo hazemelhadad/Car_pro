@@ -172,7 +172,13 @@ namespace CompanyVechile.Repositories
                 Vehicle_Color = v.Vehicle_Color,
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
-                Branch_ID = v.Branch_ID
+                Branch_ID = v.Branch_ID,
+                Vehicle_Price = v.Vehicle_Price,
+                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_LastRepair_Date = v.Vehicle_LastRepair_Date,
+                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price,
+                Vehicle_LastAccident_Date = v.Vehicle_LastAccident_Date,
+                Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
 
         }
@@ -191,7 +197,13 @@ namespace CompanyVechile.Repositories
                 Vehicle_Color = v.Vehicle_Color,
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
-                Branch_ID = v.Branch_ID
+                Branch_ID = v.Branch_ID,
+                Vehicle_Price = v.Vehicle_Price,
+                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_LastRepair_Date = v.Vehicle_LastRepair_Date,
+                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price,
+                Vehicle_LastAccident_Date = v.Vehicle_LastAccident_Date,
+                Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
         }
         //-------------------------------------------------------
@@ -209,7 +221,13 @@ namespace CompanyVechile.Repositories
                 Vehicle_Color = v.Vehicle_Color,
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
-                Branch_ID = v.Branch_ID
+                Branch_ID = v.Branch_ID,
+                Vehicle_Price = v.Vehicle_Price,
+                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_LastRepair_Date = v.Vehicle_LastRepair_Date,
+                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price,
+                Vehicle_LastAccident_Date = v.Vehicle_LastAccident_Date,
+                Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
         }
         //-------------------------------------------------------
@@ -227,7 +245,13 @@ namespace CompanyVechile.Repositories
                 Vehicle_Color = vhc.Vehicle_Color,
                 Vehicle_Type = vhc.Vehicle_Type,
                 Vehicle_Insurance = vhc.Vehicle_Insurance,
-                Branch_ID = vhc.Branch_ID
+                Branch_ID = vhc.Branch_ID,
+                Vehicle_Price = vhc.Vehicle_Price,
+                Vehicle_Mileage = vhc.Vehicle_Mileage,
+                Vehicle_LastRepair_Date = vhc.Vehicle_LastRepair_Date,
+                Vehicle_LastRepair_Price = vhc.Vehicle_LastRepair_Price,
+                Vehicle_LastAccident_Date = vhc.Vehicle_LastAccident_Date,
+                Vehicle_Owner = vhc.Vehicle_Owner
             };
             
             db.Vehicle.Add(vehicle);
@@ -256,6 +280,12 @@ namespace CompanyVechile.Repositories
             oldVehicle.Vehicle_Type = vhc.Vehicle_Type;
             oldVehicle.Vehicle_ManufactureYear = vhc.Vehicle_ManufactureYear;
             oldVehicle.Branch_ID = vhc.Branch_ID;
+            oldVehicle.Vehicle_Price = vhc.Vehicle_Price;
+            oldVehicle.Vehicle_Mileage = vhc.Vehicle_Mileage;
+            oldVehicle.Vehicle_LastRepair_Date = vhc.Vehicle_LastRepair_Date;
+            oldVehicle.Vehicle_LastRepair_Price = vhc.Vehicle_LastRepair_Price;
+            oldVehicle.Vehicle_LastAccident_Date = vhc.Vehicle_LastAccident_Date;
+            oldVehicle.Vehicle_Owner = vhc.Vehicle_Owner;
 
             db.SaveChanges();
             return true;

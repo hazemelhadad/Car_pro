@@ -17,13 +17,18 @@ namespace CompanyVechile.Models
         public string Vehicle_Type { get; set; }
         public string Vehicle_Insurance { get; set; }
 
+        //New Edits
+        public float Vehicle_Price { get; set; } = 0.0f;
+        public int Vehicle_Mileage { get; set; } = 0;
+        public string Vehicle_LastRepair_Date { get; set; } = "غير معلوم";
+        public float Vehicle_LastRepair_Price { get; set; } = 0.0f;
+        public string Vehicle_LastAccident_Date { get; set; } = "لم يحدث أي حوادث";
+        public string Vehicle_Owner { get; set; } = "غير معلوم";
+        //end of new Edits
+
         [ForeignKey("Branch")]
         public int? Branch_ID { get; set; }
         public Branches Branch { get; set; }
-
-
-        //public  ICollection<Employees> Employees { get; set; }   //Many to Many table
-
         public ICollection<EmployeesVehicle> EmployeesVehicles { get; set; }
 
     }
