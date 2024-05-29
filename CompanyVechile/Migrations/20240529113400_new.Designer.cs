@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyVechile.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    [Migration("20240523183208_NewArabic_Added")]
-    partial class NewArabic_Added
+    [Migration("20240529113400_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,11 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Branch_Location")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Branch_Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Branch_ID");
 
@@ -50,7 +50,7 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.EmployeePhone", b =>
                 {
                     b.Property<string>("Employee_ID")
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_PhoneNumber")
                         .HasColumnType("nvarchar(450)");
@@ -63,38 +63,38 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.Employees", b =>
                 {
                     b.Property<string>("Employee_ID")
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int?>("Branch_ID")
                         .HasColumnType("int");
 
                     b.Property<string>("Employee_Birthday")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_BuildingNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_Nationality")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Employee_Street_Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -109,10 +109,10 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.EmployeesVehicle", b =>
                 {
                     b.Property<string>("VehiclePlateNumber")
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("VehiclePlateNumber", "EmployeeId");
 
@@ -124,66 +124,63 @@ namespace CompanyVechile.Migrations
             modelBuilder.Entity("CompanyVechile.Models.Vehicle", b =>
                 {
                     b.Property<string>("Vehicle_PlateNumber")
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int?>("Branch_ID")
                         .HasColumnType("int");
 
                     b.Property<string>("License_ExpirationDate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("License_Registeration")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("License_SerialNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(4  )");
 
                     b.Property<string>("Vehicle_ChassisNum")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_Insurance")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_LastAccident_Date")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_LastRepair_Date")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
-                    b.Property<float>("Vehicle_LastRepair_Price")
+                    b.Property<float?>("Vehicle_LastRepair_Price")
                         .HasColumnType("real");
 
                     b.Property<int>("Vehicle_ManufactureYear")
                         .HasColumnType("int");
 
-                    b.Property<int>("Vehicle_Mileage")
+                    b.Property<int?>("Vehicle_Mileage")
                         .HasColumnType("int");
 
                     b.Property<string>("Vehicle_Owner")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
-                    b.Property<float>("Vehicle_Price")
+                    b.Property<float?>("Vehicle_Price")
                         .HasColumnType("real");
 
                     b.Property<string>("Vehicle_Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Vehicle_PlateNumber");
 

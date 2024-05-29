@@ -150,10 +150,10 @@ namespace CompanyVechile.Repositories
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
                 Branch_ID=v.Branch_ID,
-                Vehicle_Price = v.Vehicle_Price,
-                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_Price = v.Vehicle_Price.Value,
+                Vehicle_Mileage = v.Vehicle_Mileage.Value,
                 Vehicle_LastRepair_Date=v.Vehicle_LastRepair_Date,
-                Vehicle_LastRepair_Price=v.Vehicle_LastRepair_Price,
+                Vehicle_LastRepair_Price=v.Vehicle_LastRepair_Price.Value,
                 Vehicle_LastAccident_Date= v.Vehicle_LastAccident_Date,
                 Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
@@ -175,10 +175,10 @@ namespace CompanyVechile.Repositories
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
                 Branch_ID = v.Branch_ID,
-                Vehicle_Price = v.Vehicle_Price,
-                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_Price = v.Vehicle_Price.Value,
+                Vehicle_Mileage = v.Vehicle_Mileage.Value,
                 Vehicle_LastRepair_Date = v.Vehicle_LastRepair_Date,
-                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price,
+                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price.Value,
                 Vehicle_LastAccident_Date = v.Vehicle_LastAccident_Date,
                 Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
@@ -199,10 +199,10 @@ namespace CompanyVechile.Repositories
                 Vehicle_Type = v.Vehicle_Type,
                 Vehicle_Insurance = v.Vehicle_Insurance,
                 Branch_ID = v.Branch_ID,
-                Vehicle_Price = v.Vehicle_Price,
-                Vehicle_Mileage = v.Vehicle_Mileage,
+                Vehicle_Price = v.Vehicle_Price.Value,
+                Vehicle_Mileage = v.Vehicle_Mileage.Value,
                 Vehicle_LastRepair_Date = v.Vehicle_LastRepair_Date,
-                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price,
+                Vehicle_LastRepair_Price = v.Vehicle_LastRepair_Price.Value,
                 Vehicle_LastAccident_Date = v.Vehicle_LastAccident_Date,
                 Vehicle_Owner = v.Vehicle_Owner
             }).ToList();
