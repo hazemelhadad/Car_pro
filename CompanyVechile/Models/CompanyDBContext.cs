@@ -31,7 +31,7 @@ namespace CompanyVechile.Models
 
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Vehicle_BrandName)
-                .HasColumnType("nvarchar(4  )");
+                .HasColumnType("nvarchar(40)");
 
             modelBuilder.Entity<Vehicle>()
                 .Property(v => v.Vehicle_Color)

@@ -205,7 +205,7 @@ namespace CompanyVechile.Migrations
                     License_ExpirationDate = table.Column<string>(type: "nvarchar(40)", nullable: false),
                     Vehicle_ChassisNum = table.Column<string>(type: "nvarchar(40)", nullable: false),
                     Vehicle_ManufactureYear = table.Column<int>(type: "int", nullable: false),
-                    Vehicle_BrandName = table.Column<string>(type: "nvarchar(4)", nullable: false),
+                    Vehicle_BrandName = table.Column<string>(type: "nvarchar(40)", nullable: false),
                     Vehicle_Color = table.Column<string>(type: "nvarchar(40)", nullable: false),
                     Vehicle_Type = table.Column<string>(type: "nvarchar(40)", nullable: false),
                     Vehicle_Insurance = table.Column<string>(type: "nvarchar(40)", nullable: false),

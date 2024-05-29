@@ -140,7 +140,7 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4  )");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_ChassisNum")
                         .IsRequired()

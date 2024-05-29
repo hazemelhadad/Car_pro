@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyVechile.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    [Migration("20240529113400_new")]
+    [Migration("20240529114655_new")]
     partial class @new
     {
         /// <inheritdoc />
@@ -143,7 +143,7 @@ namespace CompanyVechile.Migrations
 
                     b.Property<string>("Vehicle_BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4  )");
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("Vehicle_ChassisNum")
                         .IsRequired()
