@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 
 namespace CompanyVechile.Controllers
 {
@@ -22,7 +23,7 @@ namespace CompanyVechile.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
-
+        //----------------------------------------------------------------------------------------
         private int GetBranchIdFromToken()
         {
             var branchIdClaim = User.Claims.FirstOrDefault(c => c.Type == "BranchId");
@@ -32,20 +33,36 @@ namespace CompanyVechile.Controllers
             }
             return 0;
         }
+        //----------------------------------------------------------------------------------------
+        //[HttpGet("/api/AdminController/GetAllEmployeesByBranch/{branchId}")]
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult GetAllEmployees(int branchId)
+        //{
+        //    var tkn = GetBranchIdFromToken();
+        //    if (tkn == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
+        //    if (tkn == branchId)
+        //    {
+        //        var model = AdminRepo.GetAll(branchId);
+        //        if (model == null || model.Count < 1) { return NotFound(new { error = "لا يوجد موظفين في فرعك" }); }
+        //        return Ok(model);
+        //    }
+        //    else { return BadRequest( new { error = "لا يمكنك الاستعلام عن موظفين خارج فرعك"} ); }
+        //}
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetAllEmployeesByBranch")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllEmployees()
         {
             var branchId = GetBranchIdFromToken();
-            if (branchId == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
+            if(branchId ==0){ return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
 
+          
             var model = AdminRepo.GetAll(branchId);
             if (model == null || model.Count < 1) { return NotFound(new { error = "لا يوجد موظفين في فرعك" }); }
-
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetEmployeeByHisNationalID/{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetEmployeeById(string id)
@@ -58,7 +75,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetEmployeeByHisName/{name}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetEmployeeByName(string name)
@@ -71,7 +88,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpPost("/api/AdminController/AddEmployee")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddEmployee(AdminEmployeeDTO empDto)
@@ -87,7 +104,7 @@ namespace CompanyVechile.Controllers
             var model = AdminRepo.GetAll(branchId);
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpPut("/api/AdminController/UpdateEmployeeData/{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult EditEmployee(AdminEmployeeDTO empDto, string id)
@@ -102,7 +119,7 @@ namespace CompanyVechile.Controllers
             AdminRepo.EditEmp(empDto, id);
             return Ok(empDto);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/DeleteEmployee/{id}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteEmployee(string id)
@@ -116,7 +133,7 @@ namespace CompanyVechile.Controllers
             AdminRepo.DeleteEmp(id);
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetAllVehiclesByBranch")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllBranchVehicles()
@@ -129,7 +146,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetVehicleByPltNum/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetVehicleByPlateNumberViaBranch(string PltNum)
@@ -142,7 +159,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetVehicleByType/{type}")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetVehicleByType(string type)
@@ -155,7 +172,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpPost("/api/AdminController/AddVehicle")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddVehicleForBranch(VehicleDTO vhc)
@@ -168,7 +185,7 @@ namespace CompanyVechile.Controllers
             AdminRepo.AddVehicle(vhc);
             return Ok(vhc);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpPut("/api/AdminController/UpdateVehicleData/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult EditVehicle(VehicleDTO vhc, string PltNum)
@@ -183,7 +200,7 @@ namespace CompanyVechile.Controllers
             AdminRepo.EditVhc(vhc, PltNum);
             return Ok(vhc);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/DeleteVehicle/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteVehicles(string PltNum)
@@ -197,7 +214,7 @@ namespace CompanyVechile.Controllers
             AdminRepo.DeleteVehicle(PltNum);
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetAllVehiclesInUse")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllVehiclesInUse()
@@ -210,7 +227,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(model);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpPost("/api/AdminController/AssignEmployeeToVehicle")]
         [Authorize(Roles = "Admin")]
         public IActionResult AssignEmployeeToVehicle(EmployeesVehiclesDTO evo)
@@ -223,7 +240,7 @@ namespace CompanyVechile.Controllers
 
             return Ok(evo);
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/FreeTheVehicleFromAllEmployees/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult FreeVehicle(string PltNum)
@@ -239,7 +256,7 @@ namespace CompanyVechile.Controllers
 
             return BadRequest(new { error = "لا يوجد موظفين/موظف يستعملون تلك المركبة." });
         }
-
+        //----------------------------------------------------------------------------------------
         [HttpDelete("/api/AdminController/FreeTheVehicleFromSingleEmployee/{id}/{PltNum}")]
         [Authorize(Roles = "Admin")]
         public IActionResult FreeVehicleFromOne(string id, string PltNum)

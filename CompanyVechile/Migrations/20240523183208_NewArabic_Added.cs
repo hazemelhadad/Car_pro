@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CompanyVechile.Migrations
 {
     /// <inheritdoc />
-    public partial class addederrormessages : Migration
+    public partial class NewArabic_Added : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,8 +56,8 @@ namespace CompanyVechile.Migrations
                 {
                     Branch_ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Branch_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Branch_Location = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Branch_Name = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Branch_Location = table.Column<string>(type: "nvarchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,14 +174,14 @@ namespace CompanyVechile.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Employee_ID = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Employee_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Employee_Birthday = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Employee_Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Employee_Nationality = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Employee_Street_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Employee_BuildingNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Employee_City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Employee_ID = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_Name = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_Birthday = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_Role = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_Nationality = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_Street_Name = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_BuildingNumber = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Employee_City = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     Branch_ID = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -199,16 +199,22 @@ namespace CompanyVechile.Migrations
                 name: "Vehicle",
                 columns: table => new
                 {
-                    Vehicle_PlateNumber = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    License_SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    License_Registeration = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    License_ExpirationDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Vehicle_ChassisNum = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Vehicle_PlateNumber = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    License_SerialNumber = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    License_Registeration = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    License_ExpirationDate = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_ChassisNum = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     Vehicle_ManufactureYear = table.Column<int>(type: "int", nullable: false),
-                    Vehicle_BrandName = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Vehicle_Color = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Vehicle_Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Vehicle_Insurance = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Vehicle_BrandName = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_Color = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_Type = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_Insurance = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_Price = table.Column<float>(type: "real", nullable: false),
+                    Vehicle_Mileage = table.Column<int>(type: "int", nullable: false),
+                    Vehicle_LastRepair_Date = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_LastRepair_Price = table.Column<float>(type: "real", nullable: false),
+                    Vehicle_LastAccident_Date = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    Vehicle_Owner = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     Branch_ID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -225,7 +231,7 @@ namespace CompanyVechile.Migrations
                 name: "EmployeePhones",
                 columns: table => new
                 {
-                    Employee_ID = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Employee_ID = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     Employee_PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -243,8 +249,8 @@ namespace CompanyVechile.Migrations
                 name: "EmployeesVehicles",
                 columns: table => new
                 {
-                    EmployeeId = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    VehiclePlateNumber = table.Column<string>(type: "nvarchar(50)", nullable: false)
+                    EmployeeId = table.Column<string>(type: "nvarchar(20)", nullable: false),
+                    VehiclePlateNumber = table.Column<string>(type: "nvarchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
