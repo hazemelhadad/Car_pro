@@ -17,12 +17,13 @@ namespace CompanyVechile.DTO
         public int? Branch_ID { get; set; }
 
         //New Edits
-        public float Vehicle_Price { get; set; } = 0.0f;
-        public int Vehicle_Mileage { get; set; } = 0;
-        public string Vehicle_LastRepair_Date { get; set; } = "غير معلوم";
-        public float Vehicle_LastRepair_Price { get; set; } = 0.0f;
-        public string Vehicle_LastAccident_Date { get; set; } = "لم يحدث أي حوادث";
-        public string Vehicle_Owner { get; set; } = "غير معلوم";
+        public float? Vehicle_Price { get; set; } = 0.0f;
+        public int? Vehicle_Mileage { get; set; } = 0;
+        public string? Vehicle_LastRepair_Date { get; set; } = "غير معلوم";
+        public float? Vehicle_LastRepair_Price { get; set; } = 0.0f;
+        public string? Vehicle_LastAccident_Date { get; set; } = "لم يحدث أي حوادث";
+        public string? Vehicle_Owner { get; set; } = "غير معلوم";
+
         //end of new Edits
     }
 }
