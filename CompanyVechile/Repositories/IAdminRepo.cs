@@ -13,6 +13,7 @@ namespace CompanyVechile.Repositories
         void AddEmp(AdminEmployeeDTO empDto);
         void EditEmp(AdminEmployeeDTO empDto, string id);
         void DeleteEmp(string id);
+        string getEmployeeNameById(string empId);
 
         //----Vehicles Region----
         List<VehicleDTO> GetAllVehicles(int branchId);

@@ -109,33 +109,37 @@ namespace CompanyVechile.Controllers
                 }
 
                 var branchId = employee.Branch_ID.Value;
-                var token = await GenerateJwtToken(user, branchId);
+                var token = await GenerateJwtToken(user, branchId,userDTO);
                 return Ok(new { message = "تم تسجيل الدخول بنجاح", Token = token });
             }
 
             return BadRequest(new { error = "كلمة المرور غير صحيحة" });
         }
 
-        private async Task<string> GenerateJwtToken(applicationUser user, int branchId)
+        private async Task<string> GenerateJwtToken(applicationUser user, int branchId, loginUserDTO loginUserDTO)
         {
             var roles = await userManager.GetRolesAsync(user);
-            var claims = new List<Claim>
+            var claims = new List<Claim>()
+     {
+         new Claim(ClaimTypes.NameIdentifier, user.UserName),
+         new Claim("BranchId", branchId.ToString()),
+         new Claim("EmplyeeName", adminRepo.getEmployeeNameById(loginUserDTO.employeeID).ToString()),//add name to taken
+         new Claim(ClaimTypes.Role, Guid.NewGuid().ToString())
+     };
+            if (roles != null)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim("BranchId", branchId.ToString())
-            };
-
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
 
             var token = new JwtSecurityToken(
                 _jwtSettings.Issuer,
                 _jwtSettings.Audience,
                 claims,
                 expires: DateTime.Now.AddDays(_jwtSettings.AccessTokenExpireDate),
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)),
-                    SecurityAlgorithms.HmacSha256Signature)
-            );
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature)); ;
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

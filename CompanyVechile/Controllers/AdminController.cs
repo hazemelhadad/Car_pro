@@ -34,22 +34,6 @@ namespace CompanyVechile.Controllers
             return 0;
         }
         //----------------------------------------------------------------------------------------
-        //[HttpGet("/api/AdminController/GetAllEmployeesByBranch/{branchId}")]
-        //[Authorize(Roles = "Admin")]
-        //public IActionResult GetAllEmployees(int branchId)
-        //{
-        //    var tkn = GetBranchIdFromToken();
-        //    if (tkn == 0) { return Unauthorized(new { error = "معرف الفرع غير موجود في الرمز المميز." }); }
-
-        //    if (tkn == branchId)
-        //    {
-        //        var model = AdminRepo.GetAll(branchId);
-        //        if (model == null || model.Count < 1) { return NotFound(new { error = "لا يوجد موظفين في فرعك" }); }
-        //        return Ok(model);
-        //    }
-        //    else { return BadRequest( new { error = "لا يمكنك الاستعلام عن موظفين خارج فرعك"} ); }
-        //}
-        //----------------------------------------------------------------------------------------
         [HttpGet("/api/AdminController/GetAllEmployeesByBranch")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllEmployees()

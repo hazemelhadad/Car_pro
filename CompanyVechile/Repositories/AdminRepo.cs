@@ -333,5 +333,13 @@ namespace CompanyVechile.Repositories
             else { return false; }
         }
         //-------------------------------------------------------
+        public string getEmployeeNameById(string empId)
+        {
+            var model = db.Employees.FirstOrDefault(p => p.Employee_ID == empId);
+
+            if (model == null) { return "empty"; }
+            else { return model.Employee_Name; }
+        }
+        //-------------------------------------------------------
     }
 }
