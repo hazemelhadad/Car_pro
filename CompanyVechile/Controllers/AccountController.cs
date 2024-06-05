@@ -123,7 +123,7 @@ namespace CompanyVechile.Controllers
      {
          new Claim(ClaimTypes.NameIdentifier, user.UserName),
          new Claim("BranchId", branchId.ToString()),
-         new Claim("EmplyeeName", adminRepo.getEmployeeNameById(loginUserDTO.employeeID).ToString()),//add name to taken
+         new Claim("EmplyeeName", adminRepo.getEmployeeNameById(loginUserDTO.employeeID).ToString()),
          new Claim(ClaimTypes.Role, Guid.NewGuid().ToString())
      };
             if (roles != null)

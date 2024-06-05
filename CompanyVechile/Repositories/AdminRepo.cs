@@ -20,7 +20,7 @@ namespace CompanyVechile.Repositories
         {
             return db.Employees
                      .Include(e => e.EmployeePhones)
-                     .Where(e => e.Branch_ID == branchId && e.Employee_Role == "Driver")
+                     .Where(e => e.Branch_ID == branchId && e.Employee_Role == "سائق")
                      .Select(e => new AdminEmployeeDTO
                      {
                          Employee_ID = e.Employee_ID,
@@ -40,7 +40,7 @@ namespace CompanyVechile.Repositories
         public List<AdminEmployeeDTO> GetEmpByID(string id, int branchId)
         {
             var employee = db.Employees
-                             .Where(e => e.Employee_ID.Contains(id) && e.Branch_ID == branchId && e.Employee_Role == "Driver")
+                             .Where(e => e.Employee_ID.Contains(id) && e.Branch_ID == branchId && e.Employee_Role == "سائق")
                              .Include(e => e.EmployeePhones)
                              .Select(e => new AdminEmployeeDTO
                              {
@@ -68,7 +68,7 @@ namespace CompanyVechile.Repositories
         public List<AdminEmployeeDTO> GetEmpByName(string name, int branchId)
         {
             return db.Employees
-                     .Where(e => e.Employee_Name.Contains(name) && e.Branch_ID == branchId && e.Employee_Role == "Driver")
+                     .Where(e => e.Employee_Name.Contains(name) && e.Branch_ID == branchId && e.Employee_Role == "سائق")
                      .Include(e => e.EmployeePhones)
                      .Select(e => new AdminEmployeeDTO
                      {
@@ -288,7 +288,7 @@ namespace CompanyVechile.Repositories
             var employee = db.Employees.FirstOrDefault(e => e.Employee_ID == employeeId);
             var vehicle = db.Vehicle.FirstOrDefault(v => v.Vehicle_PlateNumber == vehiclePlateNumber);
 
-            if (employee != null && vehicle != null && employee.Branch_ID == vehicle.Branch_ID && employee.Employee_Role == "Driver")
+            if (employee != null && vehicle != null && employee.Branch_ID == vehicle.Branch_ID && employee.Employee_Role == "سائق")
             {
                 var employeeAssignedToVehicle = new EmployeesVehicle
                 {
