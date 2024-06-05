@@ -1,27 +1,46 @@
-# CarsProject
+# Vehicles & Employees Management System
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.
+This project is a comprehensive system designed to manage vehicles and employees within a company. It provides functionalities for registering new employees, assigning roles, managing vehicles, and tracking vehicle usage.
 
-## Development server
+## Technologies Used
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **ASP.NET Core Web API**: The backend of the system is developed using ASP.NET Core Web API, providing RESTful endpoints for communication with the frontend.
+  
+- **Entity Framework**: Entity Framework is used as the ORM (Object-Relational Mapper) for interacting with the database, making database operations easier and more efficient.
 
-## Code scaffolding
+- **Angular 17**: The frontend of the system is built using Angular 17, a modern and powerful framework for building single-page web applications.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Microsoft SQL Server**: The data storage for the system is implemented using Microsoft SQL Server, a robust relational database management system.
 
-## Build
+## Functionality
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Account Management
 
-## Running unit tests
+- **Registration**: New employees can register for an account by providing their employee ID and password.
+  
+- **Login**: Registered employees can log in to the system using their credentials.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Employee Management
 
-## Running end-to-end tests
+- **Admin Interface**: Administrators have access to functionalities such as adding, updating, and deleting employees.
+  
+- **Role Assignment**: Employees can be assigned roles such as Admin or SuperAdmin.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Vehicle Management
 
-## Further help
+- **Add Vehicles**: Administrators can add new vehicles to the system, specifying details such as plate number, type, and branch ID.
+  
+- **Assign Vehicles**: Employees can be assigned to vehicles, tracking which employee is using which vehicle.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Usage Instructions
+
+1. Clone the repository to your local machine.
+2. Set up the backend by opening the project in Visual Studio and configuring the database connection string in `appsettings.json`.
+3. Run the backend project to start the ASP.NET Core Web API server.
+4. Set up the frontend by navigating to the `client` directory and installing dependencies using `npm install`.
+5. Run the frontend using `ng serve` to start the Angular development server.
+6. Access the application in your web browser by navigating to `http://localhost:4200`.
+7. Register a new account or log in with existing credentials.
+8. Use the provided functionalities to manage employees and vehicles within the system.
+
+Enjoy managing your company's vehicles and employees efficiently with the Vehicles & Employees Management System!
